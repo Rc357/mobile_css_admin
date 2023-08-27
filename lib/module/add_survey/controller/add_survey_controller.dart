@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
 import 'package:admin/models/admin_model.dart';
 import 'package:admin/models/question_model.dart';
@@ -50,6 +51,8 @@ class AddSurveyController extends GetxController {
 
   bool get isLoading => _status.value == AddSurveyStatus.loading;
 
+  final questionType = QuestionTypeEnum.unknown.obs;
+
   String currentState() =>
       'AddSurveyController(_status: ${_status.value}, length ${allQuestion.length}, message: ${allMessages.length}';
 
@@ -90,29 +93,33 @@ class AddSurveyController extends GetxController {
     );
   }
 
+  void updateTypeOfQuestion(QuestionTypeEnum type) {
+    questionType.value = type;
+  }
+
   void updateQuestion(String value) {
     question.value = value;
   }
 
-  void updateExcellent(String value) {
-    excellent.value = int.parse(value);
-  }
+  // void updateExcellent(String value) {
+  //   excellent.value = int.parse(value);
+  // }
 
-  void updateVerySatisfactory(String value) {
-    verSatisfactory.value = int.parse(value);
-  }
+  // void updateVerySatisfactory(String value) {
+  //   verSatisfactory.value = int.parse(value);
+  // }
 
-  void updateSatisfactory(String value) {
-    satisfactory.value = int.parse(value);
-  }
+  // void updateSatisfactory(String value) {
+  //   satisfactory.value = int.parse(value);
+  // }
 
-  void updateFair(String value) {
-    fair.value = int.parse(value);
-  }
+  // void updateFair(String value) {
+  //   fair.value = int.parse(value);
+  // }
 
-  void updatePoor(String value) {
-    poor.value = int.parse(value);
-  }
+  // void updatePoor(String value) {
+  //   poor.value = int.parse(value);
+  // }
 
   void updateThankYouMessage(String message) {
     thankYouMessage.value = message;
@@ -147,30 +154,33 @@ class AddSurveyController extends GetxController {
   }
 
   Future<void> _addQuestion() async {
+    if (questionType.value == QuestionTypeEnum.unknown) {
+      Get.snackbar(
+        'Warning!',
+        "Please select answer type.",
+        colorText: Colors.white,
+        backgroundColor: Colors.lightBlue,
+        icon: const Icon(Icons.add_alert),
+      );
+    }
     try {
       final generateQuestionId = _generateQuestionId();
       // officeName + DateTime.now().toString()
 
-      final _choice = ChoicesDetails(
-        points1: excellent.value.toString(),
-        rating1: 'Excellent',
-        points2: verSatisfactory.value.toString(),
-        rating2: 'Very Satisfactory',
-        points3: satisfactory.value.toString(),
-        rating3: 'Satisfactory',
-        points4: fair.value.toString(),
-        rating4: 'Fair',
-        points5: poor.value.toString(),
-        rating5: 'Poor',
-      );
       final questionData = QuestionModel(
         id: generateQuestionId,
-        choice: _choice,
         question: question.value,
         questionNumber: questionNumber.value,
-        type: 'Five Selection',
+        type: questionType.value.description,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
+        agree: 0,
+        disagree: 0,
+        excellent: 0,
+        verySatisfactory: 0,
+        satisfactory: 0,
+        fair: 0,
+        poor: 0,
       );
 
       await QuestionsRepository.createNewQuestionAdmin(
@@ -182,7 +192,6 @@ class AddSurveyController extends GetxController {
 
       _getQuestions();
     } catch (e) {
-      // Error occurred while signing up.
       print('Error: $e');
     }
   }
@@ -226,7 +235,7 @@ class AddSurveyController extends GetxController {
     } else {
       _addThankYouMessage();
       _status.value = AddSurveyStatus.submitted;
-      Get.back(closeOverlays: true);
+
       Get.snackbar(
         'Success!',
         "Message Added Successful",
@@ -244,21 +253,26 @@ class AddSurveyController extends GetxController {
       await uploadImage(selectedImage.value!);
     }
 
-    try {
-      final date = DateTime.now();
-      final isoDate = date.toIso8601String();
-      final messageId = args.adminType.description + isoDate;
+    final date = DateTime.now();
+    final isoDate = date.toIso8601String();
+    final officeName = args.adminType.description
+        .replaceAll(RegExp(r'[^\w\s ]+'), "")
+        .removeAllWhitespace;
+    final messageId = officeName + isoDate;
 
-      final messageData = ThankYouMessageModel(
-        messageId: messageId,
-        message: thankYouMessage.value,
-        office: args.adminType.description,
-        image: imageURL.value,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+    final messageData = ThankYouMessageModel(
+      messageId: messageId,
+      message: thankYouMessage.value,
+      office: officeName,
+      image: imageURL.value,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+
+    MyLogger.printInfo('_addThankYouMessage : $officeName');
+    try {
       await QuestionsRepository.createNewThankYouMessageAdmin(
-          messageData, 'regards' + args.adminType.description);
+          messageData, 'regards' + officeName);
       _getMessages();
     } catch (e) {
       // Error occurred while signing up.
@@ -268,8 +282,10 @@ class AddSurveyController extends GetxController {
 
   void _getMessages() async {
     try {
-      allMessages.value = await QuestionsRepository.getMessages(
-          'regards' + args.adminType.description);
+      allMessages.value = await QuestionsRepository.getMessages('regards' +
+          args.adminType.description
+              .replaceAll(RegExp(r'[^\w\s ]+'), "")
+              .removeAllWhitespace);
     } catch (e) {
       print('Error: $e');
     }
@@ -278,7 +294,11 @@ class AddSurveyController extends GetxController {
   void getMessagesViaId(String messageID) async {
     try {
       getMessage.value = await QuestionsRepository.getMessagesViaId(
-          messageID, 'regards' + args.adminType.description);
+          messageID,
+          'regards' +
+              args.adminType.description
+                  .replaceAll(RegExp(r'[^\w\s ]+'), "")
+                  .removeAllWhitespace);
       MyLogger.printInfo('GET IMAGE URL: ' + getMessage.value!.image);
       if (getMessage.value != null) {
         Get.toNamed(AppPages.PREVIEW_IMAGE);

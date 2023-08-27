@@ -1,5 +1,6 @@
 import 'package:admin/module/add_admin/widgets/text_field_widget.dart';
 import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
+import 'package:admin/module/add_survey/widgets/dropdown_field.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +17,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Add New Survey Question Number ${controller.questionNumber}',
+              'Add New Survey Question Number ${controller.questionNumber.value}',
             ),
             Divider(
               height: 1,
@@ -45,44 +46,53 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
                 SizedBox(
                   height: 15,
                 ),
-                selectionOption(
-                  context: context,
-                  initialValue: 'Excellent',
-                  onChanged: (value) => controller.updateExcellent(value!),
+                AnswerTypeDropdown(
+                  onChanged: (value) {
+                    if (value == null) {
+                      return;
+                    }
+                    controller.updateTypeOfQuestion(value);
+                  },
+                  name: 'question${controller.questionNumber.value}',
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                selectionOption(
-                  context: context,
-                  initialValue: 'Very Satisfactory',
-                  onChanged: (value) =>
-                      controller.updateVerySatisfactory(value!),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                selectionOption(
-                  context: context,
-                  initialValue: 'Satisfactory',
-                  onChanged: (value) => controller.updateSatisfactory(value!),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                selectionOption(
-                  context: context,
-                  initialValue: 'Fair',
-                  onChanged: (value) => controller.updateFair(value!),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                selectionOption(
-                  context: context,
-                  initialValue: 'Poor',
-                  onChanged: (value) => controller.updatePoor(value!),
-                ),
+                // selectionOption(
+                //   context: context,
+                //   initialValue: 'Excellent',
+                //   onChanged: (value) => controller.updateExcellent(value!),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // selectionOption(
+                //   context: context,
+                //   initialValue: 'Very Satisfactory',
+                //   onChanged: (value) =>
+                //       controller.updateVerySatisfactory(value!),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // selectionOption(
+                //   context: context,
+                //   initialValue: 'Satisfactory',
+                //   onChanged: (value) => controller.updateSatisfactory(value!),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // selectionOption(
+                //   context: context,
+                //   initialValue: 'Fair',
+                //   onChanged: (value) => controller.updateFair(value!),
+                // ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // selectionOption(
+                //   context: context,
+                //   initialValue: 'Poor',
+                //   onChanged: (value) => controller.updatePoor(value!),
+                // ),
               ],
             ),
           ),
