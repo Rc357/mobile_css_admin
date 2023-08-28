@@ -57,7 +57,7 @@ class SecurityAdminOfficeController extends GetxController {
   Future<void> getUserSecurityAdminOffice() async {
     status.value = SecurityAdminOfficeControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: "Admin's Office");
+      users.value = await UserRepository.getUsers(office: "Security Office");
       hasReachedMax.value = false;
       status.value = SecurityAdminOfficeControllerStatus.loaded;
     } on FirebaseException catch (e) {

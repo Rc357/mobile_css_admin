@@ -1,4 +1,7 @@
 import 'package:admin/models/thank_you_message_model.dart';
+import 'package:admin/module/add_survey/controller/edit_message_controller.dart';
+import 'package:admin/module/add_survey/widgets/delete_message_dialog.dart';
+import 'package:admin/module/add_survey/widgets/edit_thank_you_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -78,8 +81,9 @@ class MessageCardWidget extends GetView<AddSurveyController> {
 }
 
 class TooltipWithActions extends StatelessWidget {
-  TooltipWithActions(this.adminData);
-  final ThankYouMessageModel adminData;
+  TooltipWithActions(this.messageData);
+  final ThankYouMessageModel messageData;
+  final editMessageController = EditMessageController.instance;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -105,12 +109,14 @@ class TooltipWithActions extends StatelessWidget {
               child: ListTile(
                 leading: Icon(Icons.edit),
                 title: Text('Edit Message'),
-                onTap: () {
+                onTap: () async {
                   Get.back(closeOverlays: true);
-                  // Get.toNamed(
-                  //   AppPages.ADD_SURVEY,
-                  //   arguments: adminData,
-                  // );
+                  editMessageController.setInitialData(messageData);
+
+                  await showDialog(
+                    context: context,
+                    builder: (context) => EditThankYouMessageDialog(),
+                  );
                 },
               ),
             ),
@@ -121,9 +127,12 @@ class TooltipWithActions extends StatelessWidget {
                   'Delete Message',
                   style: TextStyle(color: Colors.red),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context); // Close the popup menu
-                  // Perform the delete action
+                  await showDialog(
+                    context: context,
+                    builder: (context) => DeleteMessageDialog(messageData),
+                  );
                 },
               ),
             ),

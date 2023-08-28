@@ -1,4 +1,4 @@
-import 'package:admin/module/dashboard_admin_office/widgets/user_card.dart';
+import 'package:admin/module/dashboard_security_admin_office/widgets/user_card.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -20,7 +20,7 @@ class SecurityAdminOfficeScreen extends StatelessWidget {
                   fontSize: 24),
             ),
             buildHeader(context),
-            AdminOfficeUserCardWidget(),
+            SecurityAdminOfficeUserCardWidget(),
           ],
         ),
       ),

@@ -62,7 +62,7 @@ class GetAllAminController extends GetxController {
     try {
       _allAdmins.value = await AddAdminRepository.getAllAdmins();
       _status.value = GetAllAminStatus.fetched;
-      MyLogger.printError(currentState());
+      MyLogger.printInfo(currentState());
     } on Exception catch (e) {
       MyLogger.printError(e);
       AppSnackbar.showErrorInfo(

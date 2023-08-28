@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import '../components/side_menu.dart';
 
 class MainScreen extends StatelessWidget {
-  final menuAppController = MenuAppController.instance;
+  final menuAppController = DashboardController.instance;
   final mainScreenController = MainScreenController.instance;
   @override
   Widget build(BuildContext context) {
@@ -59,11 +59,6 @@ class MainScreen extends StatelessWidget {
                                             : Container(),
               ),
             ),
-            // Expanded(
-            //   // It takes 5/6 part of the screen
-            //   flex: 5,
-            //   child: AddAdminScreen(),
-            // ),
           ],
         ),
       ),

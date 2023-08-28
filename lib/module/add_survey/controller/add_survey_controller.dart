@@ -61,7 +61,7 @@ class AddSurveyController extends GetxController {
     super.onInit();
     MyLogger.printInfo(currentState());
     getQuestions();
-    _getMessages();
+    getMessages();
     _monitorLoginStatus();
   }
 
@@ -258,21 +258,24 @@ class AddSurveyController extends GetxController {
     try {
       await QuestionsRepository.createNewThankYouMessageAdmin(
           messageData, 'regards' + officeName);
-      _getMessages();
+      getMessages();
     } catch (e) {
       // Error occurred while signing up.
       print('Error: $e');
     }
   }
 
-  void _getMessages() async {
+  void getMessages() async {
     try {
+      _status.value = AddSurveyStatus.loading;
       allMessages.value = await QuestionsRepository.getMessages('regards' +
           args.adminType.description
               .replaceAll(RegExp(r'[^\w\s ]+'), "")
               .removeAllWhitespace);
+      _status.value = AddSurveyStatus.loaded;
     } catch (e) {
       print('Error: $e');
+      _status.value = AddSurveyStatus.failed;
     }
   }
 
@@ -321,7 +324,7 @@ class AddSurveyController extends GetxController {
           .putData(imageData, metadata);
       imageURL.value = await snapshot.ref.getDownloadURL();
     } catch (e) {
-      MyLogger.printInfo("Unable to upload image error: $e");
+      MyLogger.printError("Unable to upload image error: $e");
     }
   }
 }

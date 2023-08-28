@@ -10,7 +10,7 @@ class AddAdminHeader extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final menuAppController = MenuAppController.instance;
+  final menuAppController = DashboardController.instance;
   @override
   Widget build(BuildContext context) {
     return Row(

@@ -55,25 +55,6 @@ class QuestionsRepository {
     }
   }
 
-  // static Future<void> updateAdmin(AdminModel admin) async {
-  //   try {
-  //     final docRef = firestore.collection(_admins).doc(admin.id);
-  //     await docRef.update(admin.toMap());
-  //   } catch (_) {
-  //     rethrow;
-  //   }
-  // }
-
-  // static Future<Future<DocumentSnapshot<Map<String, dynamic>>>> getAdminViaId(
-  //     String id) async {
-  //   try {
-  //     final adminData = firestore.collection(_admins).doc(id).get();
-  //     return adminData;
-  //   } catch (_) {
-  //     rethrow;
-  //   }
-  // }
-
   static Future<List<QuestionModel>> getQuestions(String office) async {
     final collectionRef = firestore.collection(office);
     final query = collectionRef.orderBy(QuestionModel.QUESTION_NUMBER);
@@ -95,9 +76,31 @@ class QuestionsRepository {
     }
   }
 
+  static Future<void> updateThankYouMessageAdmin(
+      ThankYouMessageModel message, String officeName) async {
+    try {
+      final docRef = firestore.collection(officeName).doc(message.messageId);
+      await docRef.update(message.toMap());
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<bool> deleteMessageAdmin(String refName, String id) async {
+    MyLogger.printInfo('Reference : $refName');
+    try {
+      await firestore.collection(refName).doc(id).delete();
+      return true;
+    } catch (e) {
+      MyLogger.printError("deleteMessageAdmin ERROR: $e");
+      return false;
+    }
+  }
+
   static Future<List<ThankYouMessageModel>> getMessages(String office) async {
     final collectionRef = firestore.collection(office);
-    final query = collectionRef.orderBy(ThankYouMessageModel.CREATED_AT);
+    final query = collectionRef.orderBy(ThankYouMessageModel.CREATED_AT,
+        descending: true);
     final result = await query.get();
     final admins = result.docs.map((doc) {
       final map = doc.data();

@@ -1,16 +1,17 @@
+import 'package:admin/module/dashboard/widgets/tool_tip.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import '../../../constants.dart';
 
-class Header extends StatelessWidget {
+class Header extends GetView<DashboardController> {
   Header({
     Key? key,
   }) : super(key: key);
 
-  final menuAppController = MenuAppController.instance;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -18,7 +19,7 @@ class Header extends StatelessWidget {
         if (!Responsive.isDesktop(context))
           IconButton(
             icon: Icon(Icons.menu),
-            onPressed: menuAppController.controlMenu,
+            onPressed: controller.controlMenu,
           ),
         if (!Responsive.isMobile(context))
           Text(
@@ -34,7 +35,7 @@ class Header extends StatelessWidget {
   }
 }
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends GetView<DashboardController> {
   const ProfileCard({
     Key? key,
   }) : super(key: key);
@@ -52,20 +53,20 @@ class ProfileCard extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         border: Border.all(color: Colors.white10),
       ),
-      child: Row(
-        children: [
-          Image.asset(
-            "assets/images/profile_pic.png",
-            height: 38,
-          ),
-          if (!Responsive.isMobile(context))
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-              child: Text("Angelina Jolie"),
-            ),
-          Icon(Icons.keyboard_arrow_down),
-        ],
+      child: Obx(
+        () => controller.adminData.value != null
+            ? Row(
+                children: [
+                  if (!Responsive.isMobile(context))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding / 2),
+                      child: Text('${controller.adminData.value!.username}'),
+                    ),
+                  LogoutTooltipWithActions(controller.adminData.value!),
+                ],
+              )
+            : SizedBox(),
       ),
     );
   }
