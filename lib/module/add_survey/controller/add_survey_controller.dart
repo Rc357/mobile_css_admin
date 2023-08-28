@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-enum AddSurveyStatus { initial, loading, submitted, failed }
+enum AddSurveyStatus { initial, loading, submitted, loaded, failed }
 
 class AddSurveyController extends GetxController {
   static AddSurveyController get instance => Get.find();
@@ -60,7 +60,7 @@ class AddSurveyController extends GetxController {
   void onInit() {
     super.onInit();
     MyLogger.printInfo(currentState());
-    _getQuestions();
+    getQuestions();
     _getMessages();
     _monitorLoginStatus();
   }
@@ -88,6 +88,9 @@ class AddSurveyController extends GetxController {
           case AddSurveyStatus.submitted:
             MyLogger.printInfo(currentState());
             break;
+          case AddSurveyStatus.loaded:
+            MyLogger.printInfo(currentState());
+            break;
         }
       },
     );
@@ -100,26 +103,6 @@ class AddSurveyController extends GetxController {
   void updateQuestion(String value) {
     question.value = value;
   }
-
-  // void updateExcellent(String value) {
-  //   excellent.value = int.parse(value);
-  // }
-
-  // void updateVerySatisfactory(String value) {
-  //   verSatisfactory.value = int.parse(value);
-  // }
-
-  // void updateSatisfactory(String value) {
-  //   satisfactory.value = int.parse(value);
-  // }
-
-  // void updateFair(String value) {
-  //   fair.value = int.parse(value);
-  // }
-
-  // void updatePoor(String value) {
-  //   poor.value = int.parse(value);
-  // }
 
   void updateThankYouMessage(String message) {
     thankYouMessage.value = message;
@@ -171,7 +154,7 @@ class AddSurveyController extends GetxController {
         id: generateQuestionId,
         question: question.value,
         questionNumber: questionNumber.value,
-        type: questionType.value.description,
+        type: questionType.value,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         agree: 0,
@@ -190,7 +173,7 @@ class AddSurveyController extends GetxController {
                   .replaceAll(RegExp(r'[^\w\s ]+'), "")
                   .removeAllWhitespace);
 
-      _getQuestions();
+      getQuestions();
     } catch (e) {
       print('Error: $e');
     }
@@ -205,7 +188,8 @@ class AddSurveyController extends GetxController {
     return generatedPostId;
   }
 
-  void _getQuestions() async {
+  void getQuestions() async {
+    _status.value = AddSurveyStatus.loading;
     try {
       allQuestion.value = await QuestionsRepository.getQuestions('questions' +
           args.adminType.description
@@ -215,6 +199,7 @@ class AddSurveyController extends GetxController {
       if (questionNumber.value == 0) {
         questionNumber.value = 1;
       }
+      _status.value = AddSurveyStatus.loaded;
     } catch (e) {
       print('Error: $e');
     }

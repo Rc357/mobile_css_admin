@@ -1,3 +1,4 @@
+import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
 import 'package:admin/instances/firebase_instances.dart';
 import 'package:admin/models/question_model.dart';
@@ -12,6 +13,45 @@ class QuestionsRepository {
       await docRef.set(question.toMap());
     } catch (_) {
       rethrow;
+    }
+  }
+
+  static Future<void> updateQuestionAdmin(
+      String officeName,
+      QuestionModel question,
+      String questionUpdate,
+      QuestionTypeEnum questionType) async {
+    final updateQuestion = QuestionModel(
+        id: question.id,
+        question: questionUpdate,
+        type: questionType,
+        updatedAt: DateTime.now(),
+        agree: question.agree,
+        createdAt: question.createdAt,
+        disagree: question.disagree,
+        excellent: question.excellent,
+        fair: question.fair,
+        poor: question.poor,
+        questionNumber: question.questionNumber,
+        satisfactory: question.satisfactory,
+        verySatisfactory: question.verySatisfactory);
+
+    try {
+      final docRef = firestore.collection(officeName).doc(question.id);
+      await docRef.update(updateQuestion.toMap());
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<bool> deleteQuestionAdmin(String officeName, String id) async {
+    MyLogger.printInfo('Office : $officeName');
+    try {
+      await firestore.collection(officeName).doc(id).delete();
+      return true;
+    } catch (e) {
+      MyLogger.printError("deleteQuestionAdmin ERROR: $e");
+      return false;
     }
   }
 

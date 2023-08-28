@@ -1,5 +1,6 @@
 import 'package:admin/helper/asset_path_helper.dart';
 import 'package:admin/module/login/controller/login_controller.dart';
+import 'package:admin/routes/app_pages.dart';
 import 'package:admin/widgets/loading_overlay_widget.dart';
 import 'package:admin/widgets/widget_no_internet.dart';
 import 'package:email_validator/email_validator.dart';
@@ -270,7 +271,8 @@ class LoginView extends GetView<LoginController> {
                                                     textStyle: const TextStyle(
                                                         fontSize: 12),
                                                   ),
-                                                  onPressed: null,
+                                                  onPressed: () => Get.toNamed(
+                                                      AppPages.FORGET_PASSWORD),
                                                   child: const Text(
                                                       'Reset Password?'),
                                                 ),

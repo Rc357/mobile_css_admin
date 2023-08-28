@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class InputTextFieldWidget extends StatelessWidget {
   final bool obscureText;
   final String label;
+  final String? initialValue;
   final Widget seePassword;
   final void Function(String?) onChanged;
   final String? Function(String?) validator;
@@ -13,6 +14,7 @@ class InputTextFieldWidget extends StatelessWidget {
     Key? key,
     this.obscureText = false,
     required this.label,
+    this.initialValue,
     this.seePassword = const SizedBox(),
     required this.onChanged,
     required this.validator,
@@ -21,6 +23,7 @@ class InputTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       obscureText: obscureText,
       obscuringCharacter: '*',
       decoration: InputDecoration(

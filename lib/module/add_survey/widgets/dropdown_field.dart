@@ -8,10 +8,12 @@ class AnswerTypeDropdown extends StatelessWidget {
     Key? key,
     required this.onChanged,
     required this.name,
+    this.initialValue,
   }) : super(key: key);
 
   final void Function(QuestionTypeEnum?) onChanged;
   final String name;
+  final QuestionTypeEnum? initialValue;
 
   final questionTypeAnswer = [
     QuestionTypeEnum.twoPointsCase,
@@ -23,6 +25,7 @@ class AnswerTypeDropdown extends StatelessWidget {
     return ButtonTheme(
       alignedDropdown: true,
       child: FormBuilderDropdown(
+        initialValue: initialValue,
         name: name,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         onChanged: onChanged,

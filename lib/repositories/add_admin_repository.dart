@@ -25,10 +25,14 @@ class AddAdminRepository {
     }
   }
 
-  static Future<Future<DocumentSnapshot<Map<String, dynamic>>>> getAdminViaId(
-      String id) async {
+  static Future<AdminModel> getAdminViaId(String id) async {
     try {
-      final adminData = firestore.collection(_admins).doc(id).get();
+      final adminRef = await firestore.collection(_admins).doc(id).get();
+      if (!adminRef.exists) {
+        throw ('Admin with id $id does not exist');
+      }
+      final map = adminRef.data() as Map<String, dynamic>;
+      final adminData = AdminModel.fromMap(map);
       return adminData;
     } catch (_) {
       rethrow;
@@ -53,5 +57,12 @@ class AddAdminRepository {
     }
     final result = await query.get();
     return result.docs.map(AdminModel.fromDocument).toList();
+  }
+
+  static Future<void> deleteAdmin({
+    required String adminId,
+  }) async {
+    final docRef = firestore.collection(_admins);
+    docRef.doc(adminId).delete();
   }
 }

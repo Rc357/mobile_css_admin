@@ -1,5 +1,6 @@
 import 'package:admin/models/admin_model.dart';
 import 'package:admin/module/add_admin/controller/get_admins_controller.dart';
+import 'package:admin/module/add_admin/widgets/delete_survey_dialog.dart';
 import 'package:admin/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -85,9 +86,9 @@ class TooltipWithActions extends StatelessWidget {
             PopupMenuItem(
               child: ListTile(
                 leading: Icon(Icons.edit),
-                title: Text('Edit Survey'),
+                title: Text('Add/Edit Survey'),
                 onTap: () {
-                  // Get.back(closeOverlays: true);
+                  Get.back();
                   Get.toNamed(
                     AppPages.ADD_SURVEY,
                     arguments: adminData,
@@ -102,8 +103,14 @@ class TooltipWithActions extends StatelessWidget {
                   'Delete Admin',
                   style: TextStyle(color: Colors.red),
                 ),
-                onTap: () {
-                  Navigator.pop(context); // Close the popup menu
+                onTap: () async {
+                  Navigator.pop(context);
+                  await showDialog(
+                    context: context,
+                    builder: (context) => DeleteAdminDialog(adminData),
+                  );
+
+                  // Close the popup menu
                   // Perform the delete action
                 },
               ),

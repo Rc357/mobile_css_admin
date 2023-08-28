@@ -1,23 +1,25 @@
-import 'package:admin/module/add_admin/widgets/text_field_widget.dart';
-import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
-import 'package:admin/module/add_survey/widgets/dropdown_field.dart';
-
+import 'package:admin/models/question_model.dart';
+import 'package:admin/module/add_survey/controller/delete_survey_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
-class AddQuestionDialog extends GetView<AddSurveyController> {
+class DeleteQuestionDialog extends GetView<DeleteSurveyController> {
+  DeleteQuestionDialog(this.questionData);
+  final QuestionModel questionData;
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-      key: controller.formKey,
       child: AlertDialog(
         title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Add New Survey Question Number ${controller.questionNumber.value}',
+              'Are you sure you want to delete this question?',
+            ),
+            SizedBox(
+              height: 10,
             ),
             Divider(
               height: 1,
@@ -33,27 +35,9 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                InputTextFieldWidget(
-                  label: 'Add Question',
-                  onChanged: (value) => controller.updateQuestion(value!),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter question';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                AnswerTypeDropdown(
-                  onChanged: (value) {
-                    if (value == null) {
-                      return;
-                    }
-                    controller.updateTypeOfQuestion(value);
-                  },
-                  name: 'question${controller.questionNumber.value}',
+                Text(
+                  'The question: ${questionData.question} with ${questionData.type.description} of answer will permanently deleted.',
+                  style: TextStyle(fontSize: 16),
                 ),
               ],
             ),
@@ -62,9 +46,8 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
         actions: [
           TextButton(
             onPressed: () async {
-              if (await controller.submitQuestion()) {
-                Navigator.of(context).pop();
-              }
+              Navigator.of(context).pop();
+              controller.deleteQuestion(questionData.id);
             },
             child: Container(
                 width: MediaQuery.of(context).size.width * .05,
@@ -74,7 +57,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
                     border: Border.all(color: Colors.white70),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Center(
-                  child: Text('Save',
+                  child: Text('Delete',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -93,7 +76,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
                     border: Border.all(color: Colors.white70),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Center(
-                  child: Text('Close',
+                  child: Text('Cancel',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,

@@ -1,5 +1,7 @@
+import 'package:admin/models/question_model.dart';
 import 'package:admin/module/add_admin/widgets/text_field_widget.dart';
-import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
+
+import 'package:admin/module/add_survey/controller/edit_survey_controller.dart';
 import 'package:admin/module/add_survey/widgets/dropdown_field.dart';
 
 import 'package:flutter/material.dart';
@@ -7,7 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
-class AddQuestionDialog extends GetView<AddSurveyController> {
+class EditQuestionDialog extends GetView<EditSurveyController> {
+  EditQuestionDialog(this.questionData);
+  final QuestionModel questionData;
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -17,7 +21,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Add New Survey Question Number ${controller.questionNumber.value}',
+              'Edit Question Number ${questionData.questionNumber}',
             ),
             Divider(
               height: 1,
@@ -34,7 +38,8 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InputTextFieldWidget(
-                  label: 'Add Question',
+                  initialValue: questionData.question,
+                  label: 'Edit Question',
                   onChanged: (value) => controller.updateQuestion(value!),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -47,13 +52,14 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
                   height: 15,
                 ),
                 AnswerTypeDropdown(
+                  initialValue: questionData.type,
                   onChanged: (value) {
                     if (value == null) {
                       return;
                     }
-                    controller.updateTypeOfQuestion(value);
+                    controller.questionTypeUpdate(value);
                   },
-                  name: 'question${controller.questionNumber.value}',
+                  name: 'question${questionData.questionNumber}',
                 ),
               ],
             ),
@@ -62,7 +68,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
         actions: [
           TextButton(
             onPressed: () async {
-              if (await controller.submitQuestion()) {
+              if (await controller.submitUpdateQuestion(questionData)) {
                 Navigator.of(context).pop();
               }
             },
@@ -74,7 +80,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
                     border: Border.all(color: Colors.white70),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Center(
-                  child: Text('Save',
+                  child: Text('Update',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -93,7 +99,7 @@ class AddQuestionDialog extends GetView<AddSurveyController> {
                     border: Border.all(color: Colors.white70),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Center(
-                  child: Text('Close',
+                  child: Text('Cancel',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,

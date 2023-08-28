@@ -7,6 +7,7 @@ abstract class Routes {
   static const MAIN_SCREEN = _Paths.MAIN_SCREEN;
   static const ADD_SURVEY = _Paths.ADD_SURVEY;
   static const PREVIEW_IMAGE = _Paths.PREVIEW_IMAGE;
+  static const FORGET_PASSWORD = _Paths.FORGET_PASSWORD;
 }
 
 abstract class _Paths {
@@ -16,5 +17,6 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const MAIN_SCREEN = '/main-screen';
   static const ADD_SURVEY = '/add-survey';
-  static const PREVIEW_IMAGE = '/previe_image';
+  static const PREVIEW_IMAGE = '/preview_image';
+  static const FORGET_PASSWORD = '/forget-password';
 }

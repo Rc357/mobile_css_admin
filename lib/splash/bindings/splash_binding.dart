@@ -7,7 +7,7 @@ class SplashBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(SplashController());
-    Get.put(CheckInternetController());
+    Get.put(CheckInternetController(), permanent: true);
     Get.put(AuthController(), permanent: true);
   }
 }

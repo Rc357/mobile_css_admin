@@ -1,4 +1,6 @@
 import 'package:admin/helper/my_logger_helper.dart';
+import 'package:admin/models/admin_model.dart';
+import 'package:admin/repositories/add_admin_repository.dart';
 import 'package:admin/repositories/auth_repository.dart';
 import 'package:admin/splash/controller/check_internet_controller.dart';
 import 'package:admin/utils/app_snackbar_util.dart';
@@ -6,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:admin/instances/firebase_instances.dart';
 
 enum LoginStatus { initial, loading, success, failed }
 
@@ -21,6 +24,7 @@ class LoginController extends GetxController {
   final userEmail = ''.obs;
   final password = ''.obs;
   final passIsEncrypted = true.obs;
+  final adminData = Rxn<AdminModel>();
 
   LoginStatus get status => _status.value;
   GlobalKey<FormBuilderState> get formKey => _formKey;
@@ -94,6 +98,9 @@ class LoginController extends GetxController {
         email: userEmail.value,
         password: password.value,
       );
+      final currentUser = firebaseAuth.currentUser!;
+      adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
+
       _status.value = LoginStatus.success;
     } on FirebaseAuthException catch (e) {
       MyLogger.printError(e);
@@ -101,7 +108,10 @@ class LoginController extends GetxController {
       _status.value = LoginStatus.failed;
     } catch (e) {
       MyLogger.printError(e);
-      AppSnackbar.showErrorInfo(message: 'Please try again later');
+      AppSnackbar.showErrorInfo(
+        title: 'Something went wrong.',
+        message: 'Invalid admin credentials',
+      );
       _status.value = LoginStatus.failed;
     }
   }
@@ -122,7 +132,7 @@ class LoginController extends GetxController {
         );
         break;
       default:
-        AppSnackbar.showErrorInfo(message: 'Please try again later');
+        AppSnackbar.showErrorInfo(message: 'Invalid admin credentials');
     }
   }
 }

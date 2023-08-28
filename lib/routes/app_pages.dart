@@ -1,6 +1,8 @@
 import 'package:admin/module/add_survey/bindings/add_survey_binding.dart';
 import 'package:admin/module/add_survey/views/add_survey_view.dart';
 import 'package:admin/module/add_survey/widgets/preview_image.dart';
+import 'package:admin/module/forgot_password/bindings/forgot_password_binding.dart';
+import 'package:admin/module/forgot_password/views/forgot_password_view.dart';
 import 'package:admin/module/login/bindings/login_binding.dart';
 import 'package:admin/module/login/views/login_view.dart';
 import 'package:admin/module/main/bindings/dashboard_binding.dart';
@@ -19,6 +21,7 @@ class AppPages {
   static const MAIN_SCREEN = Routes.MAIN_SCREEN;
   static const ADD_SURVEY = Routes.ADD_SURVEY;
   static const PREVIEW_IMAGE = Routes.PREVIEW_IMAGE;
+  static const FORGET_PASSWORD = Routes.FORGET_PASSWORD;
 
   static final routes = [
     GetPage(
@@ -45,6 +48,11 @@ class AppPages {
       name: _Paths.PREVIEW_IMAGE,
       page: () => PreviewImageWidget(),
       // binding: AddSurveyBinding(),
+    ),
+    GetPage(
+      name: _Paths.FORGET_PASSWORD,
+      page: () => ForgotPasswordView(),
+      binding: ForgotPasswordBinding(),
     ),
   ];
 }

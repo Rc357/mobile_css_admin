@@ -1,3 +1,6 @@
+import 'package:admin/module/add_survey/controller/edit_survey_controller.dart';
+import 'package:admin/module/add_survey/widgets/delete_survey_dialog.dart';
+import 'package:admin/module/add_survey/widgets/edit_survey_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -51,7 +54,7 @@ class QuestionCardWidget extends GetView<AddSurveyController> {
                   )),
             ],
           ),
-          subtitle: Text('Answer Type: ' + question.type,
+          subtitle: Text('Answer Type: ' + question.type.description,
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
@@ -62,8 +65,10 @@ class QuestionCardWidget extends GetView<AddSurveyController> {
 }
 
 class TooltipWithActions extends StatelessWidget {
-  TooltipWithActions(this.adminData);
-  final QuestionModel adminData;
+  TooltipWithActions(this.question);
+  final QuestionModel question;
+
+  final editSurveyController = EditSurveyController.instance;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -89,12 +94,13 @@ class TooltipWithActions extends StatelessWidget {
               child: ListTile(
                 leading: Icon(Icons.edit),
                 title: Text('Edit Question'),
-                onTap: () {
-                  Get.back(closeOverlays: true);
-                  // Get.toNamed(
-                  //   AppPages.ADD_SURVEY,
-                  //   arguments: adminData,
-                  // );
+                onTap: () async {
+                  Get.back();
+                  editSurveyController.updateOldQuestion(question);
+                  await showDialog(
+                    context: context,
+                    builder: (context) => EditQuestionDialog(question),
+                  );
                 },
               ),
             ),
@@ -105,9 +111,12 @@ class TooltipWithActions extends StatelessWidget {
                   'Delete Question',
                   style: TextStyle(color: Colors.red),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context); // Close the popup menu
-                  // Perform the delete action
+                  await showDialog(
+                    context: context,
+                    builder: (context) => DeleteQuestionDialog(question),
+                  );
                 },
               ),
             ),

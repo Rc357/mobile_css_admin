@@ -47,4 +47,15 @@ class AdminModel {
       updatedAt: (map[UPDATED_AT] as Timestamp).toDate(),
     );
   }
+
+  factory AdminModel.fromMap(Map<String, dynamic> map) {
+    return AdminModel(
+      id: map[ID] as String,
+      username: map[USERNAME] as String,
+      email: map[EMAIL] as String,
+      adminType: AdminTypeEnum.values.byName(map[ADMIN_TYPE] as String),
+      createdAt: (map[CREATED_AT] as Timestamp).toDate(),
+      updatedAt: (map[UPDATED_AT] as Timestamp).toDate(),
+    );
+  }
 }

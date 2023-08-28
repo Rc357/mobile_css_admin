@@ -1,4 +1,5 @@
 import 'package:admin/module/add_admin/controller/create_admin_dialog_controller.dart';
+import 'package:admin/module/add_admin/controller/delete_admin_controller.dart';
 import 'package:admin/module/add_admin/controller/get_admins_controller.dart';
 import 'package:admin/module/dashboard_admin_office/controllers/admin_office_controller.dart';
 import 'package:admin/module/dashboard_cashier/controllers/library_controller.dart';
@@ -21,5 +22,6 @@ class DashboardBinding implements Bindings {
     Get.put<SecurityAdminOfficeController>(SecurityAdminOfficeController());
     Get.put<GetAllAminController>(GetAllAminController());
     Get.put<CreateAdminDialogController>(CreateAdminDialogController());
+    Get.put<DeleteAdminController>(DeleteAdminController());
   }
 }
