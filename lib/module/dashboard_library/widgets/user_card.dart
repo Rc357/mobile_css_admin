@@ -29,7 +29,7 @@ class UserCardWidget extends GetView<LibraryController> {
                     controller.extractInitials(user.name),
                     user.name,
                     DateFormat.yMd().add_jm().format(user.createdAt).toString(),
-                    user.userType,
+                    user.userType.description,
                     user.answered);
               },
             ),
@@ -41,7 +41,7 @@ class UserCardWidget extends GetView<LibraryController> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
-          width: MediaQuery.of(context).size.width * .7,
+          width: MediaQuery.of(context).size.width * .8,
           height: MediaQuery.of(context).size.height * .07,
           decoration: BoxDecoration(
               color: Color(0xFFD9D9D9),

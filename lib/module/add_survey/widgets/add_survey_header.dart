@@ -29,20 +29,12 @@ class AddSurveyHeader extends StatelessWidget {
                 GestureDetector(
                   onTap: () => Get.back(closeOverlays: true),
                   child: Text(
-                    "Dashboard",
+                    "Create Version ",
                     style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
-                        fontSize: 18),
+                        fontSize: 16),
                   ),
-                ),
-                Icon(Icons.arrow_forward_ios_rounded),
-                Text(
-                  "All Clientele Satisfaction Surveys",
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
                 ),
                 Icon(Icons.arrow_forward_ios_rounded),
                 Text(

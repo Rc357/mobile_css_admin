@@ -41,7 +41,7 @@ class AddSurveyMenu extends GetView<AddSurveyController> {
                   Row(
                     children: [
                       Text(
-                        controller.args.adminType.description + " ",
+                        controller.args.adminName + " ",
                         style: TextStyle(color: Colors.black, fontSize: 18),
                       ),
                       Text(
@@ -66,7 +66,7 @@ class AddSurveyMenu extends GetView<AddSurveyController> {
                           SvgPicture.asset("assets/icons/dashboard/add.svg"),
                           Text(
                             'Add New Survey Question',
-                            style: TextStyle(color: Colors.blue, fontSize: 18),
+                            style: TextStyle(color: Colors.blue, fontSize: 14),
                           ),
                         ],
                       ),
@@ -86,7 +86,7 @@ class AddSurveyMenu extends GetView<AddSurveyController> {
                           SvgPicture.asset("assets/icons/dashboard/add.svg"),
                           Text(
                             'Add Thank You Message',
-                            style: TextStyle(color: Colors.blue, fontSize: 18),
+                            style: TextStyle(color: Colors.blue, fontSize: 14),
                           ),
                         ],
                       ),

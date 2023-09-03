@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:admin/helper/my_logger_helper.dart';
-import 'package:admin/models/admin_model.dart';
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/models/thank_you_message_model.dart';
 import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
 import 'package:admin/repositories/questions_repository.dart';
@@ -24,7 +24,7 @@ class EditMessageController extends GetxController {
   final _status = EditMessageStatus.initial.obs;
   final _formKey = GlobalKey<FormBuilderState>();
 
-  final args = Get.arguments as AdminModel;
+  final args = Get.arguments as ArgumentsToPass;
 
   final allMessages = <ThankYouMessageModel>[].obs;
   final initialMessage = Rxn<ThankYouMessageModel>();
@@ -106,6 +106,7 @@ class EditMessageController extends GetxController {
       );
     } else {
       _addThankYouMessage();
+      await updateQuestionnaireVersionDate();
       _status.value = EditMessageStatus.submitted;
 
       Get.snackbar(
@@ -125,23 +126,21 @@ class EditMessageController extends GetxController {
       await uploadImage(selectedImage.value!);
     }
 
-    final officeName = args.adminType.description
-        .replaceAll(RegExp(r'[^\w\s ]+'), "")
-        .removeAllWhitespace;
+    final officeName = args.adminName;
 
     final messageData = ThankYouMessageModel(
       messageId: initialMessage.value!.messageId,
       message: thankYouMessage.value,
       office: officeName,
       image: imageURL.value,
+      version: initialMessage.value!.version,
       createdAt: initialMessage.value!.createdAt,
       updatedAt: DateTime.now(),
     );
 
-    MyLogger.printInfo('Update Message : $officeName');
     try {
       await QuestionsRepository.updateThankYouMessageAdmin(
-          messageData, 'regards' + officeName);
+          messageData, args.regardsAdminName);
       addSurveyController.getMessages();
     } catch (e) {
       // Error occurred while signing up.
@@ -179,5 +178,10 @@ class EditMessageController extends GetxController {
     } catch (e) {
       MyLogger.printInfo("Unable to upload image error: $e");
     }
+  }
+
+  Future<void> updateQuestionnaireVersionDate() async {
+    await QuestionsRepository.updateQuestionnaireVersionViaId(
+        id: args.versionID, office: args.questionnaireOffice);
   }
 }

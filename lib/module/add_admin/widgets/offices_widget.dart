@@ -49,17 +49,18 @@ class OfficesCardWidget extends GetView<GetAllAminController> {
                       );
                     },
                     child: Container(
-                        width: MediaQuery.of(context).size.width * .1,
-                        height: 30,
                         decoration: BoxDecoration(
                             color: Color(0xfff0099cb),
                             border: Border.all(color: Colors.white70),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Text('Add Admin Profile',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Add Admin Profile',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              )),
+                        )),
                   ),
                   SizedBox(
                     width: 15,

@@ -40,7 +40,7 @@ class AnswerTypeDropdown extends StatelessWidget {
             value: answerType,
             child: answerType == QuestionTypeEnum.twoPointsCase
                 ? Text(
-                    answerType.description + ' (Agree or Disagree)',
+                    answerType.description + ' (Yes or No)',
                     style: Theme.of(context).textTheme.bodyLarge,
                   )
                 : Text(

@@ -116,7 +116,7 @@ class BarChartWidget extends GetView<BarGraphController> {
                                       : BarChartGroupData(x: i + 1, barRods: [
                                           BarChartRodData(
                                             toY: double.parse(controller
-                                                .allQuestion[i].agree
+                                                .allQuestion[i].yes
                                                 .toString()),
                                             color: Colors.blue,
                                             width: barWith,
@@ -125,7 +125,7 @@ class BarChartWidget extends GetView<BarGraphController> {
                                           ),
                                           BarChartRodData(
                                             toY: double.parse(controller
-                                                .allQuestion[i].disagree
+                                                .allQuestion[i].no
                                                 .toString()),
                                             color: Colors.red,
                                             width: barWith,
@@ -144,6 +144,18 @@ class BarChartWidget extends GetView<BarGraphController> {
         SizedBox(
           height: 15,
         ),
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              buildLegend('Excellent', Colors.blue),
+              buildLegend('Very Satisfactory', Colors.green),
+              buildLegend('Satisfactory', Colors.yellow),
+              buildLegend('Fair', Colors.orange),
+              buildLegend('Poor', Colors.red),
+            ],
+          ),
+        ),
         Obx(
           () => controller.totalRespondents.isNotEmpty
               ? Text(
@@ -161,4 +173,22 @@ class BarChartWidget extends GetView<BarGraphController> {
       ],
     );
   }
+
+  Widget buildLegend(String label, Color color) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 10,
+              child: CircleAvatar(
+                backgroundColor: color,
+              ),
+            ),
+            Text(
+              ' $label',
+              style: TextStyle(fontSize: 15.0),
+            ),
+          ],
+        ),
+      );
 }

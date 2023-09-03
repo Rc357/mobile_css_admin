@@ -1,11 +1,11 @@
 import 'dart:io';
 
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/repositories/questions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:admin/helper/my_logger_helper.dart';
-import 'package:admin/models/admin_model.dart';
 import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
 
 enum DeleteSurveyStatus { initial, loading, deleted, failed }
@@ -16,7 +16,7 @@ class DeleteSurveyController extends GetxController {
 
   final addSurveyController = AddSurveyController.instance;
   final _status = DeleteSurveyStatus.initial.obs;
-  final args = Get.arguments as AdminModel;
+  final args = Get.arguments as ArgumentsToPass;
 
   Rxn<File> selectedImage = Rxn<File>();
   DeleteSurveyStatus get status => _status.value;
@@ -61,13 +61,9 @@ class DeleteSurveyController extends GetxController {
 
   void deleteQuestion(String questionId) async {
     _status.value = DeleteSurveyStatus.loading;
-    final officeName = 'questions' +
-        args.adminType.description
-            .replaceAll(RegExp(r'[^\w\s ]+'), "")
-            .removeAllWhitespace;
 
-    final isSuccess =
-        await QuestionsRepository.deleteQuestionAdmin(officeName, questionId);
+    final isSuccess = await QuestionsRepository.deleteQuestionAdmin(
+        args.questionAdminName, questionId);
 
     if (isSuccess) {
       Get.snackbar(
@@ -90,5 +86,11 @@ class DeleteSurveyController extends GetxController {
     }
 
     addSurveyController.getQuestions();
+    await updateQuestionnaireVersionDate();
+  }
+
+  Future<void> updateQuestionnaireVersionDate() async {
+    await QuestionsRepository.updateQuestionnaireVersionViaId(
+        id: args.versionID, office: args.questionnaireOffice);
   }
 }

@@ -4,7 +4,6 @@ import 'package:admin/instances/firebase_instances.dart';
 import 'package:admin/models/admin_model.dart';
 import 'package:admin/models/question_model.dart';
 import 'package:admin/repositories/add_admin_repository.dart';
-import 'package:admin/repositories/questions_repository.dart';
 import 'package:get/get.dart';
 
 enum BarGraphControllerStatus { initial, loading, loaded, error }
@@ -69,33 +68,33 @@ class BarGraphController extends GetxController {
     final currentUser = firebaseAuth.currentUser!;
     adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
 
-    await getQuestions();
+    // await getQuestions();
     computerTotals();
   }
 
-  Future<void> getQuestions() async {
-    final officeName = ''.obs;
-    _status.value = BarGraphControllerStatus.loading;
-    if (adminData.value != null &&
-        adminData.value!.adminType.description != 'SuperAdmin') {
-      if (adminData.value!.adminType.name == 'Admin') {
-        officeName.value = 'questionsAdminsOffice';
-      } else {
-        officeName.value =
-            "questions${adminData.value!.adminType.description.removeAllWhitespace}";
-      }
-      MyLogger.printError('officeName.value ${officeName.value}');
+  // Future<void> getQuestions() async {
+  //   final officeName = ''.obs;
+  //   _status.value = BarGraphControllerStatus.loading;
+  //   if (adminData.value != null &&
+  //       adminData.value!.adminType.description != 'Super Admin') {
+  //     if (adminData.value!.adminType.name == 'Admin') {
+  //       officeName.value = 'questionsAdminsOffice';
+  //     } else {
+  //       officeName.value =
+  //           "questions${adminData.value!.adminType.description.removeAllWhitespace}";
+  //     }
+  //     MyLogger.printError('officeName.value ${officeName.value}');
 
-      try {
-        allQuestion.value =
-            await QuestionsRepository.getQuestions(officeName.value);
-        _status.value = BarGraphControllerStatus.loaded;
-        MyLogger.printInfo(currentState());
-      } catch (e) {
-        print('Error: $e');
-      }
-    }
-  }
+  //     try {
+  //       allQuestion.value =
+  //           await QuestionsRepository.getQuestions(officeName.value);
+  //       _status.value = BarGraphControllerStatus.loaded;
+  //       MyLogger.printInfo(currentState());
+  //     } catch (e) {
+  //       print('Error: $e');
+  //     }
+  //   }
+  // }
 
   void computerTotals() {
     if (allQuestion.isNotEmpty) {

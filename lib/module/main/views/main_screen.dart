@@ -2,6 +2,7 @@ import 'package:admin/module/dashboard_admin_office/views/admin_office_screen.da
 import 'package:admin/module/dashboard_cashier/views/cashier_screen.dart';
 import 'package:admin/module/dashboard_registrar/views/registrar_screen.dart';
 import 'package:admin/module/dashboard_security_admin_office/views/security_admin_office_screen.dart';
+import 'package:admin/module/dashboard_version/views/version_selection.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/module/add_admin/views/add_admin.dart';
 import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
@@ -34,30 +35,13 @@ class MainScreen extends StatelessWidget {
               ),
             Obx(
               () => Expanded(
-                // It takes 5/6 part of the screen
-                flex: 5,
-                child: mainScreenController.currentScreenIndex.value == 0
-                    ? DashboardScreen()
-                    : mainScreenController.currentScreenIndex.value == 1
-                        ? AddAdminScreen()
-                        : mainScreenController.currentScreenIndex.value == 2
-                            ? LibraryScreen()
-                            : mainScreenController.currentScreenIndex.value == 3
-                                ? CashierScreen()
-                                : mainScreenController
-                                            .currentScreenIndex.value ==
-                                        4
-                                    ? RegistrarScreen()
-                                    : mainScreenController
-                                                .currentScreenIndex.value ==
-                                            5
-                                        ? SecurityAdminOfficeScreen()
-                                        : mainScreenController
-                                                    .currentScreenIndex.value ==
-                                                6
-                                            ? AdminOfficeScreen()
-                                            : Container(),
-              ),
+                  // It takes 5/6 part of the screen
+                  flex: 5,
+                  child: mainScreenController.currentScreenIndex.value == 0
+                      ? DashboardScreen()
+                      : mainScreenController.currentScreenIndex.value == 1
+                          ? AddAdminScreen()
+                          : VersionSelection()),
             ),
           ],
         ),

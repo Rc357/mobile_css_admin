@@ -1,9 +1,9 @@
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/repositories/questions_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:admin/helper/my_logger_helper.dart';
-import 'package:admin/models/admin_model.dart';
 import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
 
 enum DeleteMessageStatus { initial, loading, deleted, failed }
@@ -14,7 +14,7 @@ class DeleteMessageController extends GetxController {
 
   final addSurveyController = AddSurveyController.instance;
   final _status = DeleteMessageStatus.initial.obs;
-  final args = Get.arguments as AdminModel;
+  final args = Get.arguments as ArgumentsToPass;
 
   DeleteMessageStatus get status => _status.value;
   bool get isLoading => _status.value == DeleteMessageStatus.loading;
@@ -58,13 +58,9 @@ class DeleteMessageController extends GetxController {
 
   void deleteMessage(String messageId) async {
     _status.value = DeleteMessageStatus.loading;
-    final officeName = 'regards' +
-        args.adminType.description
-            .replaceAll(RegExp(r'[^\w\s ]+'), "")
-            .removeAllWhitespace;
 
-    final isSuccess =
-        await QuestionsRepository.deleteQuestionAdmin(officeName, messageId);
+    final isSuccess = await QuestionsRepository.deleteQuestionAdmin(
+        args.regardsAdminName, messageId);
 
     if (isSuccess) {
       Get.snackbar(
@@ -85,6 +81,13 @@ class DeleteMessageController extends GetxController {
       );
       _status.value = DeleteMessageStatus.failed;
     }
+
     addSurveyController.getMessages();
+    await updateQuestionnaireVersionDate();
+  }
+
+  Future<void> updateQuestionnaireVersionDate() async {
+    await QuestionsRepository.updateQuestionnaireVersionViaId(
+        id: args.versionID, office: args.questionnaireOffice);
   }
 }

@@ -48,13 +48,13 @@ class MessageCardWidget extends GetView<AddSurveyController> {
           subtitle: Row(
             children: [
               Text(
-                  'Updated on ${DateFormat('yMMMd').format(message.updatedAt)} ',
+                  'Updated on ${DateFormat('yMMMd').format(message.updatedAt)} at ${DateFormat.jms().format(message.updatedAt)} | ',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 15,
                   )),
               Text(
-                  'Created Date ${DateFormat('yMMMd').format(message.createdAt)}',
+                  'Created Date ${DateFormat('yMMMd').format(message.createdAt)} at ${DateFormat.jms().format(message.createdAt)}',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 15,

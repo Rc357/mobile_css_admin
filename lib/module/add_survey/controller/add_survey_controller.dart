@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
-import 'package:admin/models/admin_model.dart';
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/models/question_model.dart';
 import 'package:admin/models/thank_you_message_model.dart';
 import 'package:admin/repositories/questions_repository.dart';
@@ -25,7 +25,7 @@ class AddSurveyController extends GetxController {
   final _status = AddSurveyStatus.initial.obs;
   final _formKey = GlobalKey<FormBuilderState>();
 
-  final args = Get.arguments as AdminModel;
+  final args = Get.arguments as ArgumentsToPass;
 
   final question = ''.obs;
   final questionNumber = 1.obs;
@@ -122,6 +122,7 @@ class AddSurveyController extends GetxController {
       );
     } else {
       _addQuestion();
+      await updateQuestionnaireVersionDate();
       _status.value = AddSurveyStatus.submitted;
 
       Get.snackbar(
@@ -134,6 +135,11 @@ class AddSurveyController extends GetxController {
       return true;
     }
     return false;
+  }
+
+  Future<void> updateQuestionnaireVersionDate() async {
+    await QuestionsRepository.updateQuestionnaireVersionViaId(
+        id: args.versionID, office: args.questionnaireOffice);
   }
 
   Future<void> _addQuestion() async {
@@ -157,21 +163,18 @@ class AddSurveyController extends GetxController {
         type: questionType.value,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        agree: 0,
-        disagree: 0,
+        yes: 0,
+        no: 0,
         excellent: 0,
         verySatisfactory: 0,
         satisfactory: 0,
         fair: 0,
         poor: 0,
+        version: int.parse(args.questionnaireVersion),
       );
 
       await QuestionsRepository.createNewQuestionAdmin(
-          questionData,
-          'questions' +
-              args.adminType.description
-                  .replaceAll(RegExp(r'[^\w\s ]+'), "")
-                  .removeAllWhitespace);
+          questionData, args.questionAdminName);
 
       getQuestions();
     } catch (e) {
@@ -191,10 +194,8 @@ class AddSurveyController extends GetxController {
   void getQuestions() async {
     _status.value = AddSurveyStatus.loading;
     try {
-      allQuestion.value = await QuestionsRepository.getQuestions('questions' +
-          args.adminType.description
-              .replaceAll(RegExp(r'[^\w\s ]+'), "")
-              .removeAllWhitespace);
+      allQuestion.value = await QuestionsRepository.getQuestions(
+          args.questionAdminName, int.parse(args.questionnaireVersion));
       questionNumber.value = allQuestion.length + 1;
       if (questionNumber.value == 0) {
         questionNumber.value = 1;
@@ -240,9 +241,7 @@ class AddSurveyController extends GetxController {
 
     final date = DateTime.now();
     final isoDate = date.toIso8601String();
-    final officeName = args.adminType.description
-        .replaceAll(RegExp(r'[^\w\s ]+'), "")
-        .removeAllWhitespace;
+    final officeName = args.adminName;
     final messageId = officeName + isoDate;
 
     final messageData = ThankYouMessageModel(
@@ -250,6 +249,7 @@ class AddSurveyController extends GetxController {
       message: thankYouMessage.value,
       office: officeName,
       image: imageURL.value,
+      version: int.parse(args.questionnaireVersion),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -257,7 +257,7 @@ class AddSurveyController extends GetxController {
     MyLogger.printInfo('_addThankYouMessage : $officeName');
     try {
       await QuestionsRepository.createNewThankYouMessageAdmin(
-          messageData, 'regards' + officeName);
+          messageData, args.regardsAdminName);
       getMessages();
     } catch (e) {
       // Error occurred while signing up.
@@ -268,10 +268,8 @@ class AddSurveyController extends GetxController {
   void getMessages() async {
     try {
       _status.value = AddSurveyStatus.loading;
-      allMessages.value = await QuestionsRepository.getMessages('regards' +
-          args.adminType.description
-              .replaceAll(RegExp(r'[^\w\s ]+'), "")
-              .removeAllWhitespace);
+      allMessages.value = await QuestionsRepository.getMessages(
+          args.regardsAdminName, int.parse(args.questionnaireVersion));
       _status.value = AddSurveyStatus.loaded;
     } catch (e) {
       print('Error: $e');
@@ -282,11 +280,7 @@ class AddSurveyController extends GetxController {
   void getMessagesViaId(String messageID) async {
     try {
       getMessage.value = await QuestionsRepository.getMessagesViaId(
-          messageID,
-          'regards' +
-              args.adminType.description
-                  .replaceAll(RegExp(r'[^\w\s ]+'), "")
-                  .removeAllWhitespace);
+          messageID, args.regardsAdminName);
       MyLogger.printInfo('GET IMAGE URL: ' + getMessage.value!.image);
       if (getMessage.value != null) {
         Get.toNamed(AppPages.PREVIEW_IMAGE);

@@ -10,6 +10,53 @@ service cloud.firestore {
 
             allow delete: if false;
         }
+        match /userLibrary/{userLibrary} {
+            allow create: if  true;
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if false;
+        }
+        match /userAdminsOffice/{userAdminsOffice} {
+            allow create: if  true;
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if false;
+        }
+        match /userCashier/{userCashier} {
+            allow create: if  true;
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if false;
+        }
+
+        match /userSecurityOffice/{userSecurityOffice} {
+            allow create: if  true;
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if false;
+        }
+
+        match /userRegistrar/{userRegistrar} {
+            allow create: if  true;
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if false;
+        }
 
         match /surveyLibrary/{surveyLibrary} {
             allow create: if  true;
@@ -84,9 +131,9 @@ service cloud.firestore {
         match /questionsLibrary/{questionsLibrary} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
-            allow update: if isAuthenticated();
+            allow update: if true;
 
             allow delete: if isAuthenticated();
         }
@@ -94,39 +141,61 @@ service cloud.firestore {
         match /regardsLibrary/{regardsLibrary} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
-
-            allow update: if isAuthenticated();
-
-            allow delete: if isAuthenticated();
-        }       
-
-        match /questionsAdmin'sOffice/{questionsAdmin'sOffice} {
-            allow create: if isAuthenticated();
-
-            allow read: if isAuthenticated();
+            allow read: if true;
 
             allow update: if isAuthenticated();
 
             allow delete: if isAuthenticated();
         }
 
-        match /regardsAdmin'sOffice/{regardsAdmin'sOffice} {
+
+        match /questionnaireVersionLibrary/{questionnaireVersionLibrary} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if true;
+        }       
+
+        match /questionsAdminsOffice/{questionsAdminsOffice} {
+            allow create: if isAuthenticated();
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if isAuthenticated();
+        }
+
+
+        match /regardsAdminsOffice/{regardsAdminsOffice} {
+            allow create: if isAuthenticated();
+
+            allow read: if true;
 
             allow update: if isAuthenticated();
 
             allow delete: if isAuthenticated();
         }  
 
+        match /questionnaireVersionAdminsOffice/{questionnaireVersionAdminsOffice} {
+            allow create: if isAuthenticated();
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if true;
+        }
+
         match /questionsSecurityOffice/{questionsSecurityOffice} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
-            allow update: if isAuthenticated();
+            allow update: if true;
 
             allow delete: if isAuthenticated();
         }
@@ -134,19 +203,29 @@ service cloud.firestore {
         match /regardsSecurityOffice/{regardsSecurityOffice} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
             allow update: if isAuthenticated();
 
             allow delete: if isAuthenticated();
         }  
 
+        match /questionnaireVersionSecurityOffice/{questionnaireVersionSecurityOffice} {
+            allow create: if isAuthenticated();
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if true;
+        }
+
         match /questionsRegistrar/{questionsRegistrar} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
-            allow update: if isAuthenticated();
+            allow update: if true;
 
             allow delete: if isAuthenticated();
         }
@@ -154,19 +233,29 @@ service cloud.firestore {
         match /regardsRegistrar/{regardsRegistrar} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
             allow update: if isAuthenticated();
 
             allow delete: if isAuthenticated();
-        }  
+        }
+
+        match /questionnaireVersionRegistrar/{questionnaireVersionRegistrar} {
+            allow create: if isAuthenticated();
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if true;
+        }
 
         match /questionsCashier/{questionsCashier} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
-            allow update: if isAuthenticated();
+            allow update: if true;
 
             allow delete: if isAuthenticated();
         }
@@ -174,12 +263,22 @@ service cloud.firestore {
         match /regardsCashier/{regardsCashier} {
             allow create: if isAuthenticated();
 
-            allow read: if isAuthenticated();
+            allow read: if true;
 
             allow update: if isAuthenticated();
 
             allow delete: if isAuthenticated();
         }  
+
+        match /questionnaireVersionCashier/{questionnaireVersionCashier} {
+            allow create: if isAuthenticated();
+
+            allow read: if true;
+
+            allow update: if true;
+
+            allow delete: if true;
+        }
 
 
         function isAuthenticated(){

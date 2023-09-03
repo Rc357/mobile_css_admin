@@ -1,7 +1,8 @@
 import 'package:admin/constants/my_logger.dart';
-import 'package:admin/models/user_model.dart';
+import 'package:admin/models/user_library_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum LibraryControllerStatus { initial, fetching, loaded, error }
@@ -9,24 +10,39 @@ enum LibraryControllerStatus { initial, fetching, loaded, error }
 class LibraryController extends GetxController {
   static LibraryController get instance => Get.find();
   final status = LibraryControllerStatus.initial.obs;
-  final users = <UserModel>[].obs;
-  final hasReachedMax = false.obs;
+  final users = <UserLibraryModel>[].obs;
+
+  final _hasReachedMax = false.obs;
 
   late Worker? _statusEverWorker;
+  late Worker? _hasReachedMaxListener;
+
+  // bool get hasReachedMax => _hasReachedMax.value;
+  RxBool get hasReachedMaxRx => _hasReachedMax;
+
+  final _scrollController = ScrollController();
+
+  final userCollectionName = 'userLibrary';
 
   String currentState() =>
-      'LibraryController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
+      'LibraryController(status: ${status.value}, users: ${users.length}, userCollectionName : $userCollectionName, hasReachedMax: ${_hasReachedMax.value})';
 
   @override
   void onInit() {
     _monitorFeedItemsStatus();
     getUserLibrary();
+
+    // _setUpHasReachedMaxListener();
+    // _scrollController.addListener(_monitorScrolling);
     super.onInit();
   }
 
   @override
   void onClose() {
     _statusEverWorker?.dispose();
+    _hasReachedMaxListener?.dispose();
+
+    _scrollController.dispose();
     super.onClose();
   }
 
@@ -54,11 +70,34 @@ class LibraryController extends GetxController {
     getUserLibrary();
   }
 
+  void _monitorScrolling() {
+    final offset = _scrollController.offset;
+    final maxScrollExtent = _scrollController.position.maxScrollExtent;
+    final outOfRange = _scrollController.position.outOfRange;
+    if (offset >= maxScrollExtent && !outOfRange) {
+      // getMoreUsers();
+    }
+  }
+
+  void _setUpHasReachedMaxListener() {
+    // final hasReachedMaxRx = hasReachedMaxRx.value;
+    _hasReachedMaxListener = ever(hasReachedMaxRx, (value) {
+      if (value == true) {
+        final snackBar = SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Already loaded all users'),
+        );
+        ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+      }
+    });
+  }
+
   Future<void> getUserLibrary() async {
     status.value = LibraryControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: 'Library');
-      hasReachedMax.value = false;
+      users.value =
+          await UserRepository.getUsersLibrary(office: userCollectionName);
+      _hasReachedMax.value = false;
       status.value = LibraryControllerStatus.loaded;
     } on FirebaseException catch (e) {
       status.value = LibraryControllerStatus.error;
@@ -69,31 +108,30 @@ class LibraryController extends GetxController {
     }
   }
 
-  Future<void> getMoreItems() async {
-    myLogger.i('GETTING MORE USER');
-    // We no longer need to change to fetching status
-    // to avoid the loading animation which might confuse the user
-    status.value = LibraryControllerStatus.initial;
-    try {
-      if (hasReachedMax.value == false) {
-        final lastDocumentSnapshot =
-            await UserRepository.getUserDocumentSnapshot(users.last.uid);
-        final newItems = await UserRepository.getUsers(
-            lastDocumentSnapshot: lastDocumentSnapshot, office: 'Library');
-        users.addAll(newItems);
-        if (newItems.length < UserRepository.queryLimit) {
-          hasReachedMax.value = true;
-        }
-      }
-      status.value = LibraryControllerStatus.loaded;
-    } on FirebaseException catch (e) {
-      status.value = LibraryControllerStatus.error;
-      myLogger.e(e.message ?? e.code);
-    } catch (e) {
-      status.value = LibraryControllerStatus.error;
-      myLogger.e(e.toString());
-    }
-  }
+  // Future<void> getMoreUsers() async {
+  //   myLogger.i('GETTING MORE USER');
+  //   status.value = LibraryControllerStatus.initial;
+  //   try {
+  //     if (_hasReachedMax.value == false) {
+  //       final lastDocumentSnapshot =
+  //           await UserRepository.getUserDocumentSnapshot(users.last.uid);
+  //       final newItems = await UserRepository.getUsers(
+  //           lastDocumentSnapshot: lastDocumentSnapshot,
+  //           office: userCollectionName);
+  //       users.addAll(newItems);
+  //       if (newItems.length < UserRepository.queryLimit) {
+  //         _hasReachedMax.value = true;
+  //       }
+  //     }
+  //     status.value = LibraryControllerStatus.loaded;
+  //   } on FirebaseException catch (e) {
+  //     status.value = LibraryControllerStatus.error;
+  //     myLogger.e(e.message ?? e.code);
+  //   } catch (e) {
+  //     status.value = LibraryControllerStatus.error;
+  //     myLogger.e(e.toString());
+  //   }
+  // }
 
   String extractInitials(String input) {
     List<String> words = input.split(' ');

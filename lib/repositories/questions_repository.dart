@@ -2,6 +2,7 @@ import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
 import 'package:admin/instances/firebase_instances.dart';
 import 'package:admin/models/question_model.dart';
+import 'package:admin/models/questionnaire_version_model.dart';
 import 'package:admin/models/thank_you_message_model.dart';
 
 class QuestionsRepository {
@@ -26,15 +27,16 @@ class QuestionsRepository {
         question: questionUpdate,
         type: questionType,
         updatedAt: DateTime.now(),
-        agree: question.agree,
+        yes: question.yes,
         createdAt: question.createdAt,
-        disagree: question.disagree,
+        no: question.no,
         excellent: question.excellent,
         fair: question.fair,
         poor: question.poor,
         questionNumber: question.questionNumber,
         satisfactory: question.satisfactory,
-        verySatisfactory: question.verySatisfactory);
+        verySatisfactory: question.verySatisfactory,
+        version: question.version);
 
     try {
       final docRef = firestore.collection(officeName).doc(question.id);
@@ -55,9 +57,13 @@ class QuestionsRepository {
     }
   }
 
-  static Future<List<QuestionModel>> getQuestions(String office) async {
+  static Future<List<QuestionModel>> getQuestions(
+      String office, int version) async {
+    MyLogger.printInfo("office: $office, version: $version");
     final collectionRef = firestore.collection(office);
-    final query = collectionRef.orderBy(QuestionModel.QUESTION_NUMBER);
+    final query = collectionRef
+        .where('version', isEqualTo: version)
+        .orderBy(QuestionModel.QUESTION_NUMBER);
     final result = await query.get();
     final admins = result.docs.map((doc) {
       final map = doc.data();
@@ -97,10 +103,12 @@ class QuestionsRepository {
     }
   }
 
-  static Future<List<ThankYouMessageModel>> getMessages(String office) async {
+  static Future<List<ThankYouMessageModel>> getMessages(
+      String office, int version) async {
     final collectionRef = firestore.collection(office);
-    final query = collectionRef.orderBy(ThankYouMessageModel.CREATED_AT,
-        descending: true);
+    final query = collectionRef
+        .where('version', isEqualTo: version)
+        .orderBy(ThankYouMessageModel.CREATED_AT, descending: true);
     final result = await query.get();
     final admins = result.docs.map((doc) {
       final map = doc.data();
@@ -120,6 +128,70 @@ class QuestionsRepository {
       final map = messageRef.data() as Map<String, dynamic>;
       final message = ThankYouMessageModel.fromMap(map);
       return message;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<void> createNewQuestionnaireVersionAdmin(
+      QuestionnaireVersionModel versionData, String officeName) async {
+    MyLogger.printInfo('Office : $officeName');
+    try {
+      final docRef = firestore.collection(officeName).doc();
+      final questionnaireVersionData = QuestionnaireVersionModel(
+        id: docRef.id,
+        questionnaireVersion: versionData.questionnaireVersion,
+        createdAt: versionData.createdAt,
+        updatedAt: versionData.updatedAt,
+      );
+      await docRef.set(questionnaireVersionData.toMap());
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<void> updateQuestionnaireVersionAdmin(
+      QuestionnaireVersionModel versionData, String officeName) async {
+    MyLogger.printInfo('Office : $officeName');
+    try {
+      final docRef = firestore.collection(officeName).doc(versionData.id);
+      await docRef.update(versionData.toMap());
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<bool> deleteQuestionnaireVersionAdmin(
+      String id, String officeName) async {
+    MyLogger.printInfo('ID: $id, OfficeName: $officeName');
+    try {
+      await firestore.collection(officeName).doc(id).delete();
+      return true;
+    } catch (e) {
+      MyLogger.printError("deleteQuestionnaireVersionAdmin ERROR: $e");
+      return false;
+    }
+  }
+
+  static Future<List<QuestionnaireVersionModel>> getQuestionnaireVersion(
+      String office) async {
+    final collectionRef = firestore.collection(office);
+    final query = collectionRef.orderBy(
+        QuestionnaireVersionModel.QUESTIONNAIRE_VERSION,
+        descending: true);
+    final result = await query.get();
+    final admins = result.docs.map((doc) {
+      final map = doc.data();
+      return QuestionnaireVersionModel.fromMap(map);
+    }).toList();
+    return admins;
+  }
+
+  static Future<void> updateQuestionnaireVersionViaId(
+      {required String id, required String office}) async {
+    try {
+      final docRef = firestore.collection(office).doc(id);
+      await docRef.update({"updated_at": DateTime.now()});
     } catch (_) {
       rethrow;
     }

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
-import 'package:admin/models/admin_model.dart';
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/models/question_model.dart';
 import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
 import 'package:admin/repositories/questions_repository.dart';
@@ -21,7 +21,7 @@ class EditSurveyController extends GetxController {
   final _status = EditSurveyStatus.initial.obs;
   final _formKey = GlobalKey<FormBuilderState>();
 
-  final args = Get.arguments as AdminModel;
+  final args = Get.arguments as ArgumentsToPass;
 
   final thankYouMessage = ''.obs;
 
@@ -121,16 +121,14 @@ class EditSurveyController extends GetxController {
         );
         return false;
       }
-      final officeName = 'questions' +
-          args.adminType.description
-              .replaceAll(RegExp(r'[^\w\s ]+'), "")
-              .removeAllWhitespace;
+      final officeName = args.questionAdminName;
       try {
         await QuestionsRepository.updateQuestionAdmin(officeName, question,
             questionUpdate.value, questionTypeUpdate.value);
       } catch (e) {
         print('Error: $e');
       }
+      await updateQuestionnaireVersionDate();
       _status.value = EditSurveyStatus.submitted;
       addSurveyController.getQuestions();
       Get.snackbar(
@@ -143,5 +141,10 @@ class EditSurveyController extends GetxController {
       return true;
     }
     return false;
+  }
+
+  Future<void> updateQuestionnaireVersionDate() async {
+    await QuestionsRepository.updateQuestionnaireVersionViaId(
+        id: args.versionID, office: args.questionnaireOffice);
   }
 }

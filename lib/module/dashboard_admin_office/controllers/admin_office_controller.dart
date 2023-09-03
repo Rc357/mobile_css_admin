@@ -14,13 +14,15 @@ class AdminOfficeController extends GetxController {
 
   late Worker? _statusEverWorker;
 
+  final userCollectionName = 'userLibrary';
+
   String currentState() =>
       'AdminOfficeController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
 
   @override
   void onInit() {
     _monitorFeedItemsStatus();
-    getUserAdminOffice();
+    // getUserAdminOffice();
     super.onInit();
   }
 
@@ -57,7 +59,7 @@ class AdminOfficeController extends GetxController {
   Future<void> getUserAdminOffice() async {
     status.value = AdminOfficeControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: "Admin Office");
+      users.value = await UserRepository.getUsers(office: userCollectionName);
       hasReachedMax.value = false;
       status.value = AdminOfficeControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -80,7 +82,7 @@ class AdminOfficeController extends GetxController {
             await UserRepository.getUserDocumentSnapshot(users.last.uid);
         final newItems = await UserRepository.getUsers(
             lastDocumentSnapshot: lastDocumentSnapshot,
-            office: "Admin's Office");
+            office: userCollectionName);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
           hasReachedMax.value = true;

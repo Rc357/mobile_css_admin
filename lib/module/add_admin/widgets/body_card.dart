@@ -1,4 +1,6 @@
+import 'package:admin/enums/admin_enum.dart';
 import 'package:admin/models/admin_model.dart';
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/module/add_admin/controller/get_admins_controller.dart';
 import 'package:admin/module/add_admin/widgets/delete_survey_dialog.dart';
 import 'package:admin/routes/app_pages.dart';
@@ -89,9 +91,56 @@ class TooltipWithActions extends StatelessWidget {
                 title: Text('Add/Edit Survey'),
                 onTap: () {
                   Get.back();
+                  final args = Rxn<ArgumentsToPass>();
+                  if (adminData.adminType == AdminTypeEnum.LibraryAdmin) {
+                    args.value = ArgumentsToPass(
+                        adminName: 'Library',
+                        questionAdminName: 'questionsLibrary',
+                        regardsAdminName: 'regardsLibrary',
+                        questionnaireOffice: 'questionnaireVersionLibrary',
+                        questionnaireVersion: '',
+                        versionID: '');
+                  } else if (adminData.adminType == AdminTypeEnum.Admin) {
+                    args.value = ArgumentsToPass(
+                        adminName: "Admin's Office",
+                        questionAdminName: 'questionsAdminsOffice',
+                        regardsAdminName: 'regardsAdminsOffice',
+                        questionnaireOffice: 'questionnaireVersionAdminsOffice',
+                        questionnaireVersion: '',
+                        versionID: '');
+                  } else if (adminData.adminType ==
+                      AdminTypeEnum.SecurityAdmin) {
+                    args.value = ArgumentsToPass(
+                        adminName: 'Security Office',
+                        questionAdminName: 'questionsSecurityOffice',
+                        regardsAdminName: 'regardsSecurityOffice',
+                        questionnaireOffice:
+                            'questionnaireVersionSecurityOffice',
+                        questionnaireVersion: '',
+                        versionID: '');
+                  } else if (adminData.adminType ==
+                      AdminTypeEnum.RegistrarAdmin) {
+                    args.value = ArgumentsToPass(
+                        adminName: 'Registrar',
+                        questionAdminName: 'questionsRegistrar',
+                        regardsAdminName: 'regardsRegistrar',
+                        questionnaireOffice: 'questionnaireVersionRegistrar',
+                        questionnaireVersion: '',
+                        versionID: '');
+                  } else if (adminData.adminType ==
+                      AdminTypeEnum.CashierAdmin) {
+                    args.value = ArgumentsToPass(
+                        adminName: 'Cashier',
+                        questionAdminName: 'questionsCashier',
+                        regardsAdminName: 'regardsCashier',
+                        questionnaireOffice: 'questionnaireVersionCashier',
+                        questionnaireVersion: '',
+                        versionID: '');
+                  }
+
                   Get.toNamed(
-                    AppPages.ADD_SURVEY,
-                    arguments: adminData,
+                    AppPages.ADD_SURVEY_VERSION,
+                    arguments: args.value,
                   );
                 },
               ),

@@ -14,13 +14,15 @@ class RegistrarController extends GetxController {
 
   late Worker? _statusEverWorker;
 
+  final userCollectionName = 'userLibrary';
+
   String currentState() =>
       'RegistrarController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
 
   @override
   void onInit() {
     _monitorFeedItemsStatus();
-    getUserRegistrar();
+    // getUserRegistrar();
     super.onInit();
   }
 
@@ -57,7 +59,7 @@ class RegistrarController extends GetxController {
   Future<void> getUserRegistrar() async {
     status.value = RegistrarControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: 'Registrar');
+      users.value = await UserRepository.getUsers(office: userCollectionName);
       hasReachedMax.value = false;
       status.value = RegistrarControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -79,7 +81,8 @@ class RegistrarController extends GetxController {
         final lastDocumentSnapshot =
             await UserRepository.getUserDocumentSnapshot(users.last.uid);
         final newItems = await UserRepository.getUsers(
-            lastDocumentSnapshot: lastDocumentSnapshot, office: 'Registrar');
+            lastDocumentSnapshot: lastDocumentSnapshot,
+            office: userCollectionName);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
           hasReachedMax.value = true;

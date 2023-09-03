@@ -1,27 +1,49 @@
 import 'package:admin/module/dashboard_admin_office/widgets/user_card.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../constants.dart';
 
 class AdminOfficeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        primary: false,
-        padding: EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: [
-            Text(
-              "Admin's Office Respondents".toUpperCase(),
-              style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24),
-            ),
-            buildHeader(context),
-            AdminOfficeUserCardWidget(),
-          ],
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          primary: false,
+          padding: EdgeInsets.all(defaultPadding),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Get.back(closeOverlays: true),
+                    child: Text(
+                      "Version List",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                  ),
+                  Icon(Icons.arrow_forward_ios_rounded),
+                  Text(
+                    "Respondents",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ],
+              ),
+              Text(
+                "Admin's Office Respondents".toUpperCase(),
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24),
+              ),
+              buildHeader(context),
+              AdminOfficeUserCardWidget(),
+            ],
+          ),
         ),
       ),
     );
@@ -31,21 +53,17 @@ class AdminOfficeScreen extends StatelessWidget {
     BuildContext context,
   ) =>
       Container(
-        width: MediaQuery.of(context).size.width * .7,
+        width: MediaQuery.of(context).size.width * .8,
         height: MediaQuery.of(context).size.height * .07,
         child: Row(children: [
           Expanded(
               flex: 4,
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * .08),
-                child: Text('Name',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    )),
-              )),
+              child: Text('Name',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ))),
           Expanded(
               flex: 2,
               child: Text('Visited Time',
