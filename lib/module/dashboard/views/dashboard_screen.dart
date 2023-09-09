@@ -36,8 +36,9 @@ class DashboardScreen extends GetView<DashboardController> {
             SizedBox(
               height: 40,
             ),
-            if (!Responsive.isMobile(context)) RespondentsWidget(),
-            if (Responsive.isMobile(context)) RespondentsWidgetMobile(),
+            RespondentsWidget(),
+            // if (!Responsive.isMobile(context)) RespondentsWidget(),
+            // if (Responsive.isMobile(context)) RespondentsWidgetMobile(),
           ],
         ),
       ),

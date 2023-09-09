@@ -35,7 +35,7 @@ class OfficeVersionCardWidget extends GetView<OfficeVersionController> {
       duration: Duration(milliseconds: 200),
       child: InkWell(
         onTap: () {
-          controller.toOfficeScreen();
+          controller.toOfficeScreen(version);
         },
         onHover: (val) {
           isHover.value = val;

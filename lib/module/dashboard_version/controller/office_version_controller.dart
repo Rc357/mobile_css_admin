@@ -78,21 +78,21 @@ class OfficeVersionController extends GetxController {
     }
   }
 
-  void toOfficeScreen() {
+  void toOfficeScreen(QuestionnaireVersionModel version) {
     if (officeName.value == 'questionnaireVersionLibrary') {
-      Get.toNamed(AppPages.DASHBOARD_LIBRARY);
+      Get.toNamed(AppPages.DASHBOARD_LIBRARY, arguments: version);
     }
     if (officeName.value == 'questionnaireVersionCashier') {
-      Get.toNamed(AppPages.DASHBOARD_CASHIER);
+      Get.toNamed(AppPages.DASHBOARD_CASHIER, arguments: version);
     }
     if (officeName.value == 'questionnaireVersionRegistrar') {
-      Get.toNamed(AppPages.DASHBOARD_REGISTRAR);
+      Get.toNamed(AppPages.DASHBOARD_REGISTRAR, arguments: version);
     }
     if (officeName.value == 'questionnaireVersionSecurityOffice') {
-      Get.toNamed(AppPages.DASHBOARD_SECURITY);
+      Get.toNamed(AppPages.DASHBOARD_SECURITY, arguments: version);
     }
     if (officeName.value == 'questionnaireVersionAdminsOffice') {
-      Get.toNamed(AppPages.DASHBOARD_ADMIN_OFFICE);
+      Get.toNamed(AppPages.DASHBOARD_ADMIN_OFFICE, arguments: version);
     }
   }
 }

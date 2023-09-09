@@ -1,5 +1,6 @@
 import 'package:admin/constants/my_logger.dart';
-import 'package:admin/models/user_model.dart';
+import 'package:admin/models/questionnaire_version_model.dart';
+import 'package:admin/models/user_admin_office_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,14 @@ enum AdminOfficeControllerStatus { initial, fetching, loaded, error }
 class AdminOfficeController extends GetxController {
   static AdminOfficeController get instance => Get.find();
   final status = AdminOfficeControllerStatus.initial.obs;
-  final users = <UserModel>[].obs;
+  final users = <UserAdminOfficeModel>[].obs;
   final hasReachedMax = false.obs;
+
+  final args = Get.arguments as QuestionnaireVersionModel;
 
   late Worker? _statusEverWorker;
 
-  final userCollectionName = 'userLibrary';
+  final userCollectionName = 'userAdminsOffice';
 
   String currentState() =>
       'AdminOfficeController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
@@ -22,7 +25,7 @@ class AdminOfficeController extends GetxController {
   @override
   void onInit() {
     _monitorFeedItemsStatus();
-    // getUserAdminOffice();
+    getUserAdminOffice();
     super.onInit();
   }
 
@@ -59,7 +62,8 @@ class AdminOfficeController extends GetxController {
   Future<void> getUserAdminOffice() async {
     status.value = AdminOfficeControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: userCollectionName);
+      users.value = await UserRepository.getUsersAdminOffice(
+          office: userCollectionName, version: args.questionnaireVersion);
       hasReachedMax.value = false;
       status.value = AdminOfficeControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -80,9 +84,10 @@ class AdminOfficeController extends GetxController {
       if (hasReachedMax.value == false) {
         final lastDocumentSnapshot =
             await UserRepository.getUserDocumentSnapshot(users.last.uid);
-        final newItems = await UserRepository.getUsers(
+        final newItems = await UserRepository.getUsersAdminOffice(
             lastDocumentSnapshot: lastDocumentSnapshot,
-            office: userCollectionName);
+            office: userCollectionName,
+            version: args.questionnaireVersion);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
           hasReachedMax.value = true;

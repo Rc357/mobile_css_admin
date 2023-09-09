@@ -69,9 +69,9 @@ class UserRegistrarModel {
     return UserRegistrarModel(
       uid: map[UID] as String,
       name: map[NAME] as String,
-      course: map[COURSE] as CourseEnum,
-      yearLevel: map[YEAR_LEVEL] as YearLevelEnum,
-      userType: map[USER_TYPE] as UserTypeEnum,
+      course: CourseEnum.values.byName(map[COURSE] as String),
+      yearLevel: YearLevelEnum.values.byName(map[YEAR_LEVEL] as String),
+      userType: UserTypeEnum.values.byName(map[USER_TYPE] as String),
       answered: map[ANSWERED] as bool,
       version: map[VERSION] as int,
       createdAt: (map[CREATED_AT] as Timestamp).toDate(),

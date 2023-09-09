@@ -1,4 +1,5 @@
 import 'package:admin/constants/my_logger.dart';
+import 'package:admin/models/questionnaire_version_model.dart';
 import 'package:admin/models/user_library_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,12 +13,14 @@ class LibraryController extends GetxController {
   final status = LibraryControllerStatus.initial.obs;
   final users = <UserLibraryModel>[].obs;
 
+  final args = Get.arguments as QuestionnaireVersionModel;
+
   final _hasReachedMax = false.obs;
 
   late Worker? _statusEverWorker;
   late Worker? _hasReachedMaxListener;
 
-  // bool get hasReachedMax => _hasReachedMax.value;
+  bool get hasReachedMax => _hasReachedMax.value;
   RxBool get hasReachedMaxRx => _hasReachedMax;
 
   final _scrollController = ScrollController();
@@ -31,9 +34,8 @@ class LibraryController extends GetxController {
   void onInit() {
     _monitorFeedItemsStatus();
     getUserLibrary();
-
-    // _setUpHasReachedMaxListener();
-    // _scrollController.addListener(_monitorScrolling);
+    _setUpHasReachedMaxListener();
+    _scrollController.addListener(_monitorScrolling);
     super.onInit();
   }
 
@@ -75,12 +77,12 @@ class LibraryController extends GetxController {
     final maxScrollExtent = _scrollController.position.maxScrollExtent;
     final outOfRange = _scrollController.position.outOfRange;
     if (offset >= maxScrollExtent && !outOfRange) {
-      // getMoreUsers();
+      getMoreUsers();
     }
   }
 
   void _setUpHasReachedMaxListener() {
-    // final hasReachedMaxRx = hasReachedMaxRx.value;
+    final hasReachedMaxRx = _hasReachedMax;
     _hasReachedMaxListener = ever(hasReachedMaxRx, (value) {
       if (value == true) {
         final snackBar = SnackBar(
@@ -95,8 +97,8 @@ class LibraryController extends GetxController {
   Future<void> getUserLibrary() async {
     status.value = LibraryControllerStatus.fetching;
     try {
-      users.value =
-          await UserRepository.getUsersLibrary(office: userCollectionName);
+      users.value = await UserRepository.getUsersLibrary(
+          office: userCollectionName, version: args.questionnaireVersion);
       _hasReachedMax.value = false;
       status.value = LibraryControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -108,30 +110,31 @@ class LibraryController extends GetxController {
     }
   }
 
-  // Future<void> getMoreUsers() async {
-  //   myLogger.i('GETTING MORE USER');
-  //   status.value = LibraryControllerStatus.initial;
-  //   try {
-  //     if (_hasReachedMax.value == false) {
-  //       final lastDocumentSnapshot =
-  //           await UserRepository.getUserDocumentSnapshot(users.last.uid);
-  //       final newItems = await UserRepository.getUsers(
-  //           lastDocumentSnapshot: lastDocumentSnapshot,
-  //           office: userCollectionName);
-  //       users.addAll(newItems);
-  //       if (newItems.length < UserRepository.queryLimit) {
-  //         _hasReachedMax.value = true;
-  //       }
-  //     }
-  //     status.value = LibraryControllerStatus.loaded;
-  //   } on FirebaseException catch (e) {
-  //     status.value = LibraryControllerStatus.error;
-  //     myLogger.e(e.message ?? e.code);
-  //   } catch (e) {
-  //     status.value = LibraryControllerStatus.error;
-  //     myLogger.e(e.toString());
-  //   }
-  // }
+  Future<void> getMoreUsers() async {
+    myLogger.i('GETTING MORE USER');
+    status.value = LibraryControllerStatus.initial;
+    try {
+      if (_hasReachedMax.value == false) {
+        final lastDocumentSnapshot =
+            await UserRepository.getUserDocumentSnapshot(users.last.uid);
+        final newItems = await UserRepository.getUsersLibrary(
+            lastDocumentSnapshot: lastDocumentSnapshot,
+            office: userCollectionName,
+            version: args.questionnaireVersion);
+        users.addAll(newItems);
+        if (newItems.length < UserRepository.queryLimit) {
+          _hasReachedMax.value = true;
+        }
+      }
+      status.value = LibraryControllerStatus.loaded;
+    } on FirebaseException catch (e) {
+      status.value = LibraryControllerStatus.error;
+      myLogger.e(e.message ?? e.code);
+    } catch (e) {
+      status.value = LibraryControllerStatus.error;
+      myLogger.e(e.toString());
+    }
+  }
 
   String extractInitials(String input) {
     List<String> words = input.split(' ');

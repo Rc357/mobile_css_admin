@@ -1,4 +1,4 @@
-import 'package:admin/module/dashboard_cashier/controllers/library_controller.dart';
+import 'package:admin/module/dashboard_cashier/controllers/cashier_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class CashierUserCardWidget extends GetView<CashierController> {
                     controller.extractInitials(user.name),
                     user.name,
                     DateFormat.yMd().add_jm().format(user.createdAt).toString(),
-                    user.userType,
+                    user.userType.description,
                     user.answered);
               },
             ),

@@ -1,5 +1,6 @@
 import 'package:admin/constants/my_logger.dart';
-import 'package:admin/models/user_model.dart';
+import 'package:admin/models/questionnaire_version_model.dart';
+import 'package:admin/models/user_registrar_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,14 @@ enum RegistrarControllerStatus { initial, fetching, loaded, error }
 class RegistrarController extends GetxController {
   static RegistrarController get instance => Get.find();
   final status = RegistrarControllerStatus.initial.obs;
-  final users = <UserModel>[].obs;
+  final users = <UserRegistrarModel>[].obs;
   final hasReachedMax = false.obs;
+
+  final args = Get.arguments as QuestionnaireVersionModel;
 
   late Worker? _statusEverWorker;
 
-  final userCollectionName = 'userLibrary';
+  final userCollectionName = 'userRegistrar';
 
   String currentState() =>
       'RegistrarController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
@@ -22,7 +25,7 @@ class RegistrarController extends GetxController {
   @override
   void onInit() {
     _monitorFeedItemsStatus();
-    // getUserRegistrar();
+    getUserRegistrar();
     super.onInit();
   }
 
@@ -59,7 +62,8 @@ class RegistrarController extends GetxController {
   Future<void> getUserRegistrar() async {
     status.value = RegistrarControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: userCollectionName);
+      users.value = await UserRepository.getUsersRegistrar(
+          office: userCollectionName, version: args.questionnaireVersion);
       hasReachedMax.value = false;
       status.value = RegistrarControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -80,9 +84,10 @@ class RegistrarController extends GetxController {
       if (hasReachedMax.value == false) {
         final lastDocumentSnapshot =
             await UserRepository.getUserDocumentSnapshot(users.last.uid);
-        final newItems = await UserRepository.getUsers(
+        final newItems = await UserRepository.getUsersRegistrar(
             lastDocumentSnapshot: lastDocumentSnapshot,
-            office: userCollectionName);
+            office: userCollectionName,
+            version: args.questionnaireVersion);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
           hasReachedMax.value = true;

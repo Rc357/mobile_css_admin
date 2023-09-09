@@ -1,5 +1,6 @@
 import 'package:admin/constants/my_logger.dart';
-import 'package:admin/models/user_model.dart';
+import 'package:admin/models/questionnaire_version_model.dart';
+import 'package:admin/models/user_cashier_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,14 @@ enum CashierControllerStatus { initial, fetching, loaded, error }
 class CashierController extends GetxController {
   static CashierController get instance => Get.find();
   final status = CashierControllerStatus.initial.obs;
-  final users = <UserModel>[].obs;
+  final users = <UserCashierModel>[].obs;
   final hasReachedMax = false.obs;
+
+  final args = Get.arguments as QuestionnaireVersionModel;
 
   late Worker? _statusEverWorker;
 
-  final userCollectionName = 'userLibrary';
+  final userCollectionName = 'userCashier';
 
   String currentState() =>
       'CashierController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
@@ -22,7 +25,7 @@ class CashierController extends GetxController {
   @override
   void onInit() {
     _monitorFeedItemsStatus();
-    // getUserCashier();
+    getUserCashier();
     super.onInit();
   }
 
@@ -59,7 +62,8 @@ class CashierController extends GetxController {
   Future<void> getUserCashier() async {
     status.value = CashierControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: userCollectionName);
+      users.value = await UserRepository.getUsersCashier(
+          office: userCollectionName, version: args.questionnaireVersion);
       hasReachedMax.value = false;
       status.value = CashierControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -80,9 +84,10 @@ class CashierController extends GetxController {
       if (hasReachedMax.value == false) {
         final lastDocumentSnapshot =
             await UserRepository.getUserDocumentSnapshot(users.last.uid);
-        final newItems = await UserRepository.getUsers(
+        final newItems = await UserRepository.getUsersCashier(
             lastDocumentSnapshot: lastDocumentSnapshot,
-            office: userCollectionName);
+            office: userCollectionName,
+            version: args.questionnaireVersion);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
           hasReachedMax.value = true;

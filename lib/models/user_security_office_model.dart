@@ -64,7 +64,7 @@ class UserSecurityOfficeModel {
       uid: map[UID] as String,
       name: map[NAME] as String,
       address: map[ADDRESS] as String,
-      userType: map[USER_TYPE] as UserTypeEnum,
+      userType: UserTypeEnum.values.byName(map[USER_TYPE] as String),
       answered: map[ANSWERED] as bool,
       version: map[VERSION] as int,
       createdAt: (map[CREATED_AT] as Timestamp).toDate(),

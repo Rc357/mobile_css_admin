@@ -167,35 +167,95 @@ class DashboardController extends GetxController {
             press: () => mainScreenController.updateScreenIndex(0),
           ),
           DrawerListTile(
-            title: "Add Admin",
-            svgSrc: "assets/icons/nav_menu/add_admin.svg",
+            title: "Report Management",
+            svgSrc: "assets/icons/nav_menu/management.svg",
             press: () => mainScreenController.updateScreenIndex(1),
           ),
-          DrawerListTile(
-            title: "Library",
-            svgSrc: "assets/icons/nav_menu/library.svg",
-            press: () => mainScreenController.updateScreenIndex(2),
+          ExpansionTile(
+            title: Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/icons/nav_menu/menu_.svg",
+                  colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                  height: 10,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  'Offices',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: DrawerListTile(
+                  title: "Library",
+                  svgSrc: "assets/icons/nav_menu/library.svg",
+                  press: () => mainScreenController.updateScreenIndex(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: DrawerListTile(
+                  title: "Cashier",
+                  svgSrc: "assets/icons/nav_menu/cashier.svg",
+                  press: () => mainScreenController.updateScreenIndex(3),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: DrawerListTile(
+                  title: "Registrar",
+                  svgSrc: "assets/icons/nav_menu/registrar.svg",
+                  press: () => mainScreenController.updateScreenIndex(4),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: DrawerListTile(
+                  title: "Security Admin Office",
+                  svgSrc: "assets/icons/nav_menu/security_admin.svg",
+                  press: () => mainScreenController.updateScreenIndex(5),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: DrawerListTile(
+                  title: "Admin Office",
+                  svgSrc: "assets/icons/nav_menu/admin.svg",
+                  press: () => mainScreenController.updateScreenIndex(6),
+                ),
+              ),
+            ],
           ),
-          DrawerListTile(
-            title: "Cashier",
-            svgSrc: "assets/icons/nav_menu/cashier.svg",
-            press: () => mainScreenController.updateScreenIndex(3),
-          ),
-          DrawerListTile(
-            title: "Registrar",
-            svgSrc: "assets/icons/nav_menu/registrar.svg",
-            press: () => mainScreenController.updateScreenIndex(4),
-          ),
-          DrawerListTile(
-            title: "Security Admin Office",
-            svgSrc: "assets/icons/nav_menu/security_admin.svg",
-            press: () => mainScreenController.updateScreenIndex(5),
-          ),
-          DrawerListTile(
-            title: "Admin Office",
-            svgSrc: "assets/icons/nav_menu/admin.svg",
-            press: () => mainScreenController.updateScreenIndex(6),
-          ),
+          // DrawerListTile(
+          //   title: "Library",
+          //   svgSrc: "assets/icons/nav_menu/library.svg",
+          //   press: () => mainScreenController.updateScreenIndex(2),
+          // ),
+          // DrawerListTile(
+          //   title: "Cashier",
+          //   svgSrc: "assets/icons/nav_menu/cashier.svg",
+          //   press: () => mainScreenController.updateScreenIndex(3),
+          // ),
+          // DrawerListTile(
+          //   title: "Registrar",
+          //   svgSrc: "assets/icons/nav_menu/registrar.svg",
+          //   press: () => mainScreenController.updateScreenIndex(4),
+          // ),
+          // DrawerListTile(
+          //   title: "Security Admin Office",
+          //   svgSrc: "assets/icons/nav_menu/security_admin.svg",
+          //   press: () => mainScreenController.updateScreenIndex(5),
+          // ),
+          // DrawerListTile(
+          //   title: "Admin Office",
+          //   svgSrc: "assets/icons/nav_menu/admin.svg",
+          //   press: () => mainScreenController.updateScreenIndex(6),
+          // ),
           DrawerListTile(
             title: "Settings",
             svgSrc: "assets/icons/menu_setting.svg",

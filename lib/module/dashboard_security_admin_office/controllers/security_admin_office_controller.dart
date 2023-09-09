@@ -1,5 +1,6 @@
 import 'package:admin/constants/my_logger.dart';
-import 'package:admin/models/user_model.dart';
+import 'package:admin/models/questionnaire_version_model.dart';
+import 'package:admin/models/user_security_office_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,14 @@ enum SecurityAdminOfficeControllerStatus { initial, fetching, loaded, error }
 class SecurityAdminOfficeController extends GetxController {
   static SecurityAdminOfficeController get instance => Get.find();
   final status = SecurityAdminOfficeControllerStatus.initial.obs;
-  final users = <UserModel>[].obs;
+  final users = <UserSecurityOfficeModel>[].obs;
   final hasReachedMax = false.obs;
+
+  final args = Get.arguments as QuestionnaireVersionModel;
 
   late Worker? _statusEverWorker;
 
-  final userCollectionName = 'userLibrary';
+  final userCollectionName = 'userSecurityOffice';
 
   String currentState() =>
       'SecurityAdminOfficeController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
@@ -22,7 +25,7 @@ class SecurityAdminOfficeController extends GetxController {
   @override
   void onInit() {
     _monitorFeedItemsStatus();
-    // getUserSecurityAdminOffice();
+    getUserSecurityAdminOffice();
     super.onInit();
   }
 
@@ -59,7 +62,8 @@ class SecurityAdminOfficeController extends GetxController {
   Future<void> getUserSecurityAdminOffice() async {
     status.value = SecurityAdminOfficeControllerStatus.fetching;
     try {
-      users.value = await UserRepository.getUsers(office: userCollectionName);
+      users.value = await UserRepository.getUsersSecurityOffice(
+          office: userCollectionName, version: args.questionnaireVersion);
       hasReachedMax.value = false;
       status.value = SecurityAdminOfficeControllerStatus.loaded;
     } on FirebaseException catch (e) {
@@ -80,9 +84,10 @@ class SecurityAdminOfficeController extends GetxController {
       if (hasReachedMax.value == false) {
         final lastDocumentSnapshot =
             await UserRepository.getUserDocumentSnapshot(users.last.uid);
-        final newItems = await UserRepository.getUsers(
+        final newItems = await UserRepository.getUsersSecurityOffice(
             lastDocumentSnapshot: lastDocumentSnapshot,
-            office: userCollectionName);
+            office: userCollectionName,
+            version: args.questionnaireVersion);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
           hasReachedMax.value = true;

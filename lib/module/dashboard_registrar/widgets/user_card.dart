@@ -29,7 +29,7 @@ class RegistrarUserCardWidget extends GetView<RegistrarController> {
                     controller.extractInitials(user.name),
                     user.name,
                     DateFormat.yMd().add_jm().format(user.createdAt).toString(),
-                    user.userType,
+                    user.userType.description,
                     user.answered);
               },
             ),
