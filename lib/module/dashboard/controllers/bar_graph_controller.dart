@@ -1,9 +1,13 @@
 import 'package:admin/enums/question_type_enum.dart';
+import 'package:admin/enums/type_user_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
 import 'package:admin/instances/firebase_instances.dart';
 import 'package:admin/models/admin_model.dart';
 import 'package:admin/models/question_model.dart';
+import 'package:admin/models/user_library_model.dart';
 import 'package:admin/repositories/add_admin_repository.dart';
+import 'package:admin/repositories/questions_repository.dart';
+import 'package:admin/repositories/user_repository.dart';
 import 'package:get/get.dart';
 
 enum BarGraphControllerStatus { initial, loading, loaded, error }
@@ -25,6 +29,12 @@ class BarGraphController extends GetxController {
   final satisfactoryTotal = 0.obs;
   final fairTotal = 0.obs;
   final poorTotal = 0.obs;
+
+  final users = <UserLibraryModel>[].obs;
+  final totalAlumni = 0.obs;
+  final totalParent = 0.obs;
+  final totalGuest = 0.obs;
+  final totalStudent = 0.obs;
 
   String currentState() =>
       'BarGraphController(_status: ${_status.value} allQuestion: ${allQuestion.length},)';
@@ -68,33 +78,61 @@ class BarGraphController extends GetxController {
     final currentUser = firebaseAuth.currentUser!;
     adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
 
-    // await getQuestions();
+    await getQuestions();
     computerTotals();
   }
 
-  // Future<void> getQuestions() async {
-  //   final officeName = ''.obs;
-  //   _status.value = BarGraphControllerStatus.loading;
-  //   if (adminData.value != null &&
-  //       adminData.value!.adminType.description != 'Super Admin') {
-  //     if (adminData.value!.adminType.name == 'Admin') {
-  //       officeName.value = 'questionsAdminsOffice';
-  //     } else {
-  //       officeName.value =
-  //           "questions${adminData.value!.adminType.description.removeAllWhitespace}";
-  //     }
-  //     MyLogger.printError('officeName.value ${officeName.value}');
+  Future<void> getUserTotals(String officeName) async {
+    MyLogger.printError('getUserTotals');
+    users.value = await UserRepository.getUsersLibraryAnswered(
+        office: officeName, version: 1);
 
-  //     try {
-  //       allQuestion.value =
-  //           await QuestionsRepository.getQuestions(officeName.value);
-  //       _status.value = BarGraphControllerStatus.loaded;
-  //       MyLogger.printInfo(currentState());
-  //     } catch (e) {
-  //       print('Error: $e');
-  //     }
-  //   }
-  // }
+    MyLogger.printError('users.length : ${users.length}');
+
+    for (int i = 0; i < users.length; i++) {
+      if (users[i].userType == UserTypeEnum.alumni) {
+        totalAlumni.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.parents) {
+        totalParent.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.guest) {
+        totalGuest.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.student) {
+        totalStudent.value += 1;
+      }
+    }
+  }
+
+  Future<void> getQuestions() async {
+    final officeName = ''.obs;
+    final officeNameUsers = ''.obs;
+    _status.value = BarGraphControllerStatus.loading;
+    if (adminData.value != null &&
+        adminData.value!.adminType.description != 'Super Admin') {
+      if (adminData.value!.adminType.name == 'Admin') {
+        officeName.value = 'questionsAdminsOffice';
+        officeNameUsers.value = 'userAdminsOffice';
+      } else {
+        officeName.value =
+            "questions${adminData.value!.adminType.description.removeAllWhitespace}";
+        officeNameUsers.value =
+            "user${adminData.value!.adminType.description.removeAllWhitespace}";
+      }
+      MyLogger.printInfo('officeName.value ${officeName.value}');
+
+      try {
+        allQuestion.value =
+            await QuestionsRepository.getQuestions(officeName.value, 1);
+        _status.value = BarGraphControllerStatus.loaded;
+        MyLogger.printInfo(currentState());
+      } catch (e) {
+        print('Error: $e');
+      }
+      await getUserTotals(officeNameUsers.value);
+    }
+  }
 
   void computerTotals() {
     if (allQuestion.isNotEmpty) {
@@ -118,17 +156,8 @@ class BarGraphController extends GetxController {
       allTotal.add(satisfactoryTotal.value);
       allTotal.add(fairTotal.value);
       allTotal.add(poorTotal.value);
-      // MyLogger.printError(
-      //     "DATA HERE:  ${excellentTotal.value + verySatisfactoryTotal.value + satisfactoryTotal.value + fairTotal.value + poorTotal.value}");
-      // // totalRespondents.add();
-      // MyLogger.printError('excellentTotal ${excellentTotal.value}');
-      // MyLogger.printError(
-      //     'verySatisfactoryTotal ${verySatisfactoryTotal.value}');
-      // MyLogger.printError('satisfactoryTotal ${satisfactoryTotal.value}');
-      // MyLogger.printError('fairTotal ${fairTotal.value}');
-      // MyLogger.printError('poorTotal ${poorTotal.value}');
-      MyLogger.printError('totalRespondents ${totalRespondents.length}');
-      MyLogger.printError('totalRespondents ${totalRespondents[0]}');
+      MyLogger.printInfo('totalRespondents ${totalRespondents.length}');
+      MyLogger.printInfo('totalRespondents ${totalRespondents[0]}');
     }
   }
 }

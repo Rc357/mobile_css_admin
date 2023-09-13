@@ -28,7 +28,7 @@ class AddAdminHeader extends StatelessWidget {
           ),
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
-        Expanded(child: SearchField()),
+        // Expanded(child: SearchField()),
         Row(
           children: [
             SvgPicture.asset("assets/icons/dashboard/notification.svg"),

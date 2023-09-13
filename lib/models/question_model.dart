@@ -86,4 +86,24 @@ class QuestionModel {
       updatedAt: (map[UPDATED_AT] as Timestamp).toDate(),
     );
   }
+
+  factory QuestionModel.fromDocument(DocumentSnapshot documentSnapshot) {
+    final map = documentSnapshot.data() as Map<String, dynamic>;
+    return QuestionModel(
+      id: map[ID] as String,
+      question: map[QUESTION] as String,
+      questionNumber: map[QUESTION_NUMBER] as int,
+      type: QuestionTypeEnum.values.byName(map[TYPE] as String),
+      yes: map[YES] as int,
+      no: map[NO] as int,
+      excellent: map[EXCELlENT] as int,
+      verySatisfactory: map[VERY_SATISFACTORY] as int,
+      satisfactory: map[SATISFACTORY] as int,
+      fair: map[FAIR] as int,
+      poor: map[POOR] as int,
+      version: map[VERSION] as int,
+      createdAt: (map[CREATED_AT] as Timestamp).toDate(),
+      updatedAt: (map[UPDATED_AT] as Timestamp).toDate(),
+    );
+  }
 }

@@ -4,8 +4,23 @@ import 'package:admin/instances/firebase_instances.dart';
 import 'package:admin/models/question_model.dart';
 import 'package:admin/models/questionnaire_version_model.dart';
 import 'package:admin/models/thank_you_message_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuestionsRepository {
+  static const String _version = 'version';
+
+  static Future<QuestionModel?> findLatestVersion(String office) async {
+    final collectionRef = firestore.collection(office);
+    QuerySnapshot snapshot =
+        await collectionRef.orderBy(_version, descending: true).limit(1).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return QuestionModel.fromDocument(snapshot.docs[0]);
+    } else {
+      return null;
+    }
+  }
+
   static Future<void> createNewQuestionAdmin(
       QuestionModel question, String officeName) async {
     MyLogger.printInfo('Office : $officeName');

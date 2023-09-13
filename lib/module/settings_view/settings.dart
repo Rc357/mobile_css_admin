@@ -37,8 +37,8 @@ class SettingsScreen extends GetView<DashboardController> {
             SizedBox(
               height: 40,
             ),
-            if (!Responsive.isMobile(context)) RespondentsWidget(),
-            if (Responsive.isMobile(context)) RespondentsWidgetMobile(),
+            // if (!Responsive.isMobile(context)) RespondentsWidget(),
+            // if (Responsive.isMobile(context)) RespondentsWidgetMobile(),
           ],
         ),
       ),

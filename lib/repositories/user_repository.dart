@@ -12,6 +12,7 @@ class UserRepository {
   static const String _userData = 'user';
   static const String _dateCreated = 'created_at';
   static const String _version = 'version';
+  static const String _answered = 'answered';
 
   static Future<List<UserSecurityOfficeModel>> getUsersSecurityOffice(
       {DocumentSnapshot? lastDocumentSnapshot,
@@ -128,6 +129,96 @@ class UserRepository {
 
       final result = await query.get();
       return result.docs.map(UserLibraryModel.fromDocument).toList();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<List<UserLibraryModel>> getUsersLibraryAnswered(
+      {String? office, required int version}) async {
+    MyLogger.printInfo('COLLECTION NAME: $office, VERSION: $version');
+    try {
+      Query query = firestore
+          .collection(office!)
+          .where(_version, isEqualTo: version)
+          .where(_answered, isEqualTo: true)
+          .orderBy(_dateCreated, descending: true)
+          .limit(queryLimit);
+
+      final result = await query.get();
+      return result.docs.map(UserLibraryModel.fromDocument).toList();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<List<UserAdminOfficeModel>> getUsersAdminOfficeAnswered(
+      {String? office, required int version}) async {
+    MyLogger.printInfo('COLLECTION NAME: $office, VERSION: $version');
+    try {
+      Query query = firestore
+          .collection(office!)
+          .where(_version, isEqualTo: version)
+          .where(_answered, isEqualTo: true)
+          .orderBy(_dateCreated, descending: true)
+          .limit(queryLimit);
+
+      final result = await query.get();
+      return result.docs.map(UserAdminOfficeModel.fromDocument).toList();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<List<UserCashierModel>> getUsersCashierOfficeAnswered(
+      {String? office, required int version}) async {
+    MyLogger.printInfo('COLLECTION NAME: $office, VERSION: $version');
+    try {
+      Query query = firestore
+          .collection(office!)
+          .where(_version, isEqualTo: version)
+          .where(_answered, isEqualTo: true)
+          .orderBy(_dateCreated, descending: true)
+          .limit(queryLimit);
+
+      final result = await query.get();
+      return result.docs.map(UserCashierModel.fromDocument).toList();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<List<UserRegistrarModel>> getUsersRegistrarOfficeAnswered(
+      {String? office, required int version}) async {
+    MyLogger.printInfo('COLLECTION NAME: $office, VERSION: $version');
+    try {
+      Query query = firestore
+          .collection(office!)
+          .where(_version, isEqualTo: version)
+          .where(_answered, isEqualTo: true)
+          .orderBy(_dateCreated, descending: true)
+          .limit(queryLimit);
+
+      final result = await query.get();
+      return result.docs.map(UserRegistrarModel.fromDocument).toList();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<List<UserSecurityOfficeModel>> getUsersSecurityOfficeAnswered(
+      {String? office, required int version}) async {
+    MyLogger.printInfo('COLLECTION NAME: $office, VERSION: $version');
+    try {
+      Query query = firestore
+          .collection(office!)
+          .where(_version, isEqualTo: version)
+          .where(_answered, isEqualTo: true)
+          .orderBy(_dateCreated, descending: true)
+          .limit(queryLimit);
+
+      final result = await query.get();
+      return result.docs.map(UserSecurityOfficeModel.fromDocument).toList();
     } catch (_) {
       rethrow;
     }

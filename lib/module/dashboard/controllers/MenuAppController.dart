@@ -74,11 +74,6 @@ class DashboardController extends GetxController {
             press: () => mainScreenController.updateScreenIndex(0),
           ),
           DrawerListTile(
-            title: "Security Admin Office",
-            svgSrc: "assets/icons/nav_menu/security_admin.svg",
-            press: () => mainScreenController.updateScreenIndex(5),
-          ),
-          DrawerListTile(
             title: "Admin Office",
             svgSrc: "assets/icons/nav_menu/admin.svg",
             press: () => mainScreenController.updateScreenIndex(6),

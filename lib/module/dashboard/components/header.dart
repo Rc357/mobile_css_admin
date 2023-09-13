@@ -1,8 +1,8 @@
 import 'package:admin/module/dashboard/widgets/tool_tip.dart';
+import 'package:admin/module/dashboard/widgets/version_dropdown_widget.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
 import '../../../constants.dart';
@@ -79,28 +79,25 @@ class SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: "Search",
-        fillColor: secondaryColor,
-        filled: true,
-        border: OutlineInputBorder(
-          borderSide: BorderSide.none,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-        suffixIcon: InkWell(
-          onTap: () {},
-          child: Container(
-            padding: EdgeInsets.all(defaultPadding * 0.75),
-            margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-            decoration: BoxDecoration(
-              color: primaryColor,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: SvgPicture.asset("assets/icons/Search.svg"),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          width: 200,
+          child: VersionDropdown(
+            onChanged: (value) {
+              if (value == null) {
+                return;
+              }
+              // controller.setGenderValue(value);
+            },
           ),
         ),
-      ),
+        SizedBox(
+          width: 20,
+        ),
+        GestureDetector(onTap: () {}, child: Text('Download')),
+      ],
     );
   }
 }

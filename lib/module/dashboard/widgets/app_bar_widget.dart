@@ -9,7 +9,7 @@ import '../controllers/bar_graph_controller.dart';
 class BarChartWidget extends GetView<BarGraphController> {
   @override
   Widget build(BuildContext context) {
-    final double barWith = 10;
+    final double barWith = 15;
     return Column(
       children: [
         Row(
@@ -27,7 +27,7 @@ class BarChartWidget extends GetView<BarGraphController> {
               ),
             ),
             Container(
-              height: 300,
+              height: 350,
               width: .7 * MediaQuery.of(context).size.width,
               child: Obx(
                 () => controller.isLoading
@@ -52,9 +52,12 @@ class BarChartWidget extends GetView<BarGraphController> {
                                               'Question ${value.toInt()}');
                                         })),
                                 leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                  showTitles: true,
-                                )),
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (value, meta) =>
+                                        Text(value.toString()),
+                                  ),
+                                ),
                                 topTitles: AxisTitles(
                                     sideTitles: SideTitles(showTitles: false)),
                                 rightTitles: AxisTitles(
@@ -164,7 +167,7 @@ class BarChartWidget extends GetView<BarGraphController> {
                     color: Color(0xff0262AC),
                     fontSize: 18,
                   ))
-              : Text("Total Number of Respondents: 0}",
+              : Text("Total Number of Respondents: 0",
                   style: TextStyle(
                     color: Color(0xff0262AC),
                     fontSize: 18,
