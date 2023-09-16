@@ -19,7 +19,6 @@ class SecurityOfficeWordCloudExample extends StatelessWidget {
 
     return Center(
       child: FittedBox(
-        fit: BoxFit.contain,
         child: Scatter(
           fillGaps: true,
           delegate: ArchimedeanSpiralScatterDelegate(ratio: ratio),
@@ -43,13 +42,9 @@ class ScatterItem extends StatelessWidget {
         );
     return RotatedBox(
       quarterTurns: hashtag.rotated ? 1 : 0,
-      child: Flexible(
-        child: Text(
-          hashtag.hashtag,
-          maxLines: 1,
-          overflow: TextOverflow.fade,
-          style: style,
-        ),
+      child: Text(
+        hashtag.hashtag,
+        style: style,
       ),
     );
   }
