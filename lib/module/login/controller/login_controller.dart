@@ -105,12 +105,14 @@ class LoginController extends GetxController {
     } on FirebaseAuthException catch (e) {
       MyLogger.printError(e);
       _showFirebaseError(e.code);
+      await AuthRepository.logout();
       _status.value = LoginStatus.failed;
     } catch (e) {
+      await AuthRepository.logout();
       MyLogger.printError(e);
       AppSnackbar.showErrorInfo(
         title: 'Something went wrong.',
-        message: 'Invalid admin credentials',
+        message: 'Invalid admin credentials or admin is deleted.',
       );
       _status.value = LoginStatus.failed;
     }
