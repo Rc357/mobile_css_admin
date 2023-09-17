@@ -1,7 +1,7 @@
 import 'package:admin/module/add_survey/controller/add_survey_controller.dart';
 import 'package:admin/module/add_survey/widgets/add_survey_dialog.dart';
 import 'package:admin/module/add_survey/widgets/add_thank_you_dialog.dart';
-import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
 import 'package:admin/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

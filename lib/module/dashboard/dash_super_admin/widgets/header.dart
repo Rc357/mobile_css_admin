@@ -1,11 +1,11 @@
-import 'package:admin/module/dashboard/widgets/tool_tip.dart';
+import 'package:admin/module/dashboard/dash_super_admin/widgets/tool_tip.dart';
 import 'package:admin/responsive.dart';
-import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../../constants.dart';
+import '../../../../../constants.dart';
 
 class Header extends GetView<DashboardController> {
   Header({
@@ -20,6 +20,7 @@ class Header extends GetView<DashboardController> {
           "Dashboard",
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        Spacer(),
         ProfileCard()
       ],
     );

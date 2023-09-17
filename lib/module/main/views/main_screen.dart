@@ -1,7 +1,7 @@
 import 'package:admin/module/dashboard_version/views/version_selection.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/module/add_admin/views/add_admin.dart';
-import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
 import 'package:admin/module/dashboard/views/dashboard_screen.dart';
 import 'package:admin/module/main/controller/main_screen_controller.dart';
 import 'package:flutter/material.dart';

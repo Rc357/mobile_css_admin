@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/enums/type_user_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
 import 'package:admin/instances/firebase_instances.dart';
@@ -7,7 +8,7 @@ import 'package:admin/models/admin_model.dart';
 import 'package:admin/models/question_model.dart';
 import 'package:admin/models/survey_remarks.dart';
 import 'package:admin/models/user_admin_office_model.dart';
-import 'package:admin/module/dashboard/widgets/hashtag.dart';
+import 'package:admin/module/dashboard/dash_super_admin/widgets/hashtag.dart';
 import 'package:admin/repositories/add_admin_repository.dart';
 import 'package:admin/repositories/questions_repository.dart';
 import 'package:admin/repositories/remarks_repository.dart';
@@ -20,9 +21,9 @@ enum AdminOfficeBarGraphControllerStatus { initial, loading, loaded, error }
 class AdminOfficeBarGraphController extends GetxController {
   static AdminOfficeBarGraphController get instance => Get.find();
   late Worker _statusEverWorker;
-  final _status = AdminOfficeBarGraphControllerStatus.initial.obs;
+  final status = AdminOfficeBarGraphControllerStatus.initial.obs;
   bool get isLoading =>
-      _status.value == AdminOfficeBarGraphControllerStatus.loading;
+      status.value == AdminOfficeBarGraphControllerStatus.loading;
 
   final adminData = Rxn<AdminModel>();
 
@@ -34,6 +35,22 @@ class AdminOfficeBarGraphController extends GetxController {
   final totalParent = 0.obs;
   final totalGuest = 0.obs;
   final totalStudent = 0.obs;
+
+  final averageAlumni = 0.0.obs;
+  final averageParent = 0.0.obs;
+  final averageGuest = 0.0.obs;
+  final averageStudent = 0.0.obs;
+  final totalAverageFivePoints = 0.0.obs;
+  final totalAverageTwoPoints = 0.0.obs;
+  final highestVisitor = ''.obs;
+
+  final excellent = 0.0.obs;
+  final verySatisfactory = 0.0.obs;
+  final satisfactory = 0.0.obs;
+  final fair = 0.0.obs;
+  final poor = 0.0.obs;
+  final yes = 0.0.obs;
+  final no = 0.0.obs;
 
   final officeName = 'questionsAdminsOffice';
   final officeNameUser = 'userAdminsOffice';
@@ -77,7 +94,7 @@ class AdminOfficeBarGraphController extends GetxController {
   final List<bool> fixedBool = [true, false, false, true, false, false];
 
   String currentState() =>
-      'AdminOfficeBarGraphController(_status: ${_status.value} allQuestion: ${allQuestion.length},)';
+      'AdminOfficeBarGraphController(_status: ${status.value} allQuestion: ${allQuestion.length},)';
 
   @override
   void onInit() {
@@ -94,7 +111,7 @@ class AdminOfficeBarGraphController extends GetxController {
 
   void _monitorFeedbackFormStatus() {
     _statusEverWorker = ever(
-      _status,
+      status,
       (value) async {
         switch (value) {
           case AdminOfficeBarGraphControllerStatus.error:
@@ -119,6 +136,23 @@ class AdminOfficeBarGraphController extends GetxController {
     totalParent.value = 0;
     totalGuest.value = 0;
     totalStudent.value = 0;
+
+    averageAlumni.value = 0;
+    averageParent.value = 0;
+    averageGuest.value = 0;
+    averageStudent.value = 0;
+
+    excellent.value = 0.0;
+    verySatisfactory.value = 0.0;
+    satisfactory.value = 0.0;
+    fair.value = 0.0;
+    poor.value = 0.0;
+    yes.value = 0.0;
+    no.value = 0.0;
+
+    totalAverageFivePoints.value = 0;
+    totalAverageTwoPoints.value = 0;
+
     kFlutterHashtags.clear();
   }
 
@@ -201,16 +235,15 @@ class AdminOfficeBarGraphController extends GetxController {
     adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
 
     await getQuestions();
-
     getRemarksList();
   }
 
   Future<void> getUserTotals(String officeName) async {
-    MyLogger.printError('getUserTotals');
+    MyLogger.printInfo('getUserTotals');
     users.value = await UserRepository.getUsersAdminOfficeAnswered(
         office: officeName, version: version.value);
 
-    MyLogger.printError('users.length : ${users.length}');
+    MyLogger.printInfo('users.length : ${users.length}');
 
     for (int i = 0; i < users.length; i++) {
       if (users[i].userType == UserTypeEnum.alumni) {
@@ -226,10 +259,60 @@ class AdminOfficeBarGraphController extends GetxController {
         totalStudent.value += 1;
       }
     }
+    computeAverage();
+  }
+
+  void computeAverage() {
+    averageAlumni.value = totalAlumni.value / users.length;
+    averageParent.value = totalParent.value / users.length;
+    averageGuest.value = totalGuest.value / users.length;
+    averageStudent.value = totalStudent.value / users.length;
+    if (averageAlumni.value > averageParent.value &&
+        averageAlumni.value > averageGuest.value &&
+        averageAlumni.value > averageStudent.value) {
+      highestVisitor.value = 'Alumni';
+    }
+    if (averageGuest.value > averageParent.value &&
+        averageGuest.value > averageAlumni.value &&
+        averageGuest.value > averageStudent.value) {
+      highestVisitor.value = 'Guest';
+    }
+    if (averageParent.value > averageAlumni.value &&
+        averageParent.value > averageGuest.value &&
+        averageParent.value > averageStudent.value) {
+      highestVisitor.value = 'Parent';
+    }
+    if (averageStudent.value > averageParent.value &&
+        averageStudent.value > averageGuest.value &&
+        averageStudent.value > averageAlumni.value) {
+      highestVisitor.value = 'Student';
+    }
+
+    for (var i in allQuestion) {
+      if (i.type == QuestionTypeEnum.fivePointsCase) {
+        excellent.value += i.excellent;
+        verySatisfactory.value += i.verySatisfactory;
+        satisfactory.value += i.satisfactory;
+        fair.value += i.fair;
+        poor.value += i.poor;
+      }
+      if (i.type == QuestionTypeEnum.twoPointsCase) {
+        yes.value += i.yes;
+        no.value += i.no;
+      }
+    }
+
+    totalAverageFivePoints.value = (excellent.value * 5 +
+            verySatisfactory.value * 4 +
+            satisfactory.value * 3 +
+            fair.value * 2 +
+            poor.value) /
+        5;
+    totalAverageTwoPoints.value = (yes.value * 5 + no.value * 4) / 2;
   }
 
   void getLatestVersion() async {
-    _status.value = AdminOfficeBarGraphControllerStatus.loading;
+    status.value = AdminOfficeBarGraphControllerStatus.loading;
 
     questionLatestVersion.value =
         await QuestionsRepository.findLatestVersion(officeName);
@@ -244,12 +327,12 @@ class AdminOfficeBarGraphController extends GetxController {
   }
 
   Future<void> getQuestions() async {
-    _status.value = AdminOfficeBarGraphControllerStatus.loading;
+    status.value = AdminOfficeBarGraphControllerStatus.loading;
 
     try {
       allQuestion.value =
           await QuestionsRepository.getQuestions(officeName, version.value);
-      _status.value = AdminOfficeBarGraphControllerStatus.loaded;
+      status.value = AdminOfficeBarGraphControllerStatus.loaded;
       setInterval();
       MyLogger.printInfo(currentState());
     } catch (e) {

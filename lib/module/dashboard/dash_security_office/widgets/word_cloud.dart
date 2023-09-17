@@ -1,4 +1,4 @@
-import 'package:admin/module/dashboard/widgets/hashtag.dart';
+import 'package:admin/module/dashboard/dash_super_admin/widgets/hashtag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 

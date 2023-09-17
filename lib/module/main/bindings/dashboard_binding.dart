@@ -1,9 +1,9 @@
 import 'package:admin/module/add_admin/controller/create_admin_dialog_controller.dart';
 import 'package:admin/module/add_admin/controller/delete_admin_controller.dart';
 import 'package:admin/module/add_admin/controller/get_admins_controller.dart';
-import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
-import 'package:admin/module/dashboard/controllers/bar_graph_controller.dart';
-import 'package:admin/module/dashboard/controllers/logout_controller.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/dash_super_admin_controller.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/logout_controller.dart';
 import 'package:admin/module/dashboard/dash_admin_office/controller/bar_graph_controller.dart';
 import 'package:admin/module/dashboard/dash_cashier/controller/bar_graph_controller.dart';
 import 'package:admin/module/dashboard/dash_library/controller/bar_graph_controller.dart';
@@ -19,10 +19,9 @@ class DashboardBinding implements Bindings {
     Get.put<OfficeVersionController>(OfficeVersionController());
     Get.put<MainScreenController>(MainScreenController());
     Get.put<DashboardController>(DashboardController());
-    Get.put<BarGraphController>(BarGraphController());
-    Get.put<LibraryBarGraphController>(LibraryBarGraphController());
     Get.put<AdminOfficeBarGraphController>(AdminOfficeBarGraphController());
     Get.put<CashierBarGraphController>(CashierBarGraphController());
+    Get.put<LibraryBarGraphController>(LibraryBarGraphController());
     Get.put<RegistrarBarGraphController>(RegistrarBarGraphController());
     Get.put<SecurityOfficeBarGraphController>(
         SecurityOfficeBarGraphController());

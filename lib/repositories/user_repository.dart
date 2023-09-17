@@ -142,8 +142,7 @@ class UserRepository {
           .collection(office!)
           .where(_version, isEqualTo: version)
           .where(_answered, isEqualTo: true)
-          .orderBy(_dateCreated, descending: true)
-          .limit(queryLimit);
+          .orderBy(_dateCreated, descending: true);
 
       final result = await query.get();
       return result.docs.map(UserLibraryModel.fromDocument).toList();
@@ -160,8 +159,7 @@ class UserRepository {
           .collection(office!)
           .where(_version, isEqualTo: version)
           .where(_answered, isEqualTo: true)
-          .orderBy(_dateCreated, descending: true)
-          .limit(queryLimit);
+          .orderBy(_dateCreated, descending: true);
 
       final result = await query.get();
       return result.docs.map(UserAdminOfficeModel.fromDocument).toList();
@@ -178,8 +176,7 @@ class UserRepository {
           .collection(office!)
           .where(_version, isEqualTo: version)
           .where(_answered, isEqualTo: true)
-          .orderBy(_dateCreated, descending: true)
-          .limit(queryLimit);
+          .orderBy(_dateCreated, descending: true);
 
       final result = await query.get();
       return result.docs.map(UserCashierModel.fromDocument).toList();
@@ -196,8 +193,7 @@ class UserRepository {
           .collection(office!)
           .where(_version, isEqualTo: version)
           .where(_answered, isEqualTo: true)
-          .orderBy(_dateCreated, descending: true)
-          .limit(queryLimit);
+          .orderBy(_dateCreated, descending: true);
 
       final result = await query.get();
       return result.docs.map(UserRegistrarModel.fromDocument).toList();
@@ -214,8 +210,7 @@ class UserRepository {
           .collection(office!)
           .where(_version, isEqualTo: version)
           .where(_answered, isEqualTo: true)
-          .orderBy(_dateCreated, descending: true)
-          .limit(queryLimit);
+          .orderBy(_dateCreated, descending: true);
 
       final result = await query.get();
       return result.docs.map(UserSecurityOfficeModel.fromDocument).toList();

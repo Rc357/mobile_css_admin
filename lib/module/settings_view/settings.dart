@@ -1,18 +1,9 @@
-import 'package:admin/enums/admin_enum.dart';
-import 'package:admin/module/dashboard/controllers/MenuAppController.dart';
-import 'package:admin/responsive.dart';
-import 'package:admin/module/dashboard/components/header.dart';
-// import 'package:admin/screens/dashboard/components/my_fields.dart';
-import 'package:admin/module/dashboard/widgets/app_bar_widget.dart';
-import 'package:admin/module/dashboard/widgets/respondents_widget.dart';
-import 'package:admin/module/dashboard/widgets/respondents_widget_mobile.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants.dart';
-
-// import 'components/recent_files.dart';
-// import 'components/storage_details.dart';
 
 class SettingsScreen extends GetView<DashboardController> {
   @override
@@ -23,7 +14,6 @@ class SettingsScreen extends GetView<DashboardController> {
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
-            Header(),
             SizedBox(height: defaultPadding),
             // Obx(
             //   () => controller.adminData.value != null

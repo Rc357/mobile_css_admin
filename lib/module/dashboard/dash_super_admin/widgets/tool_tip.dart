@@ -1,5 +1,5 @@
 import 'package:admin/models/admin_model.dart';
-import 'package:admin/module/dashboard/controllers/logout_controller.dart';
+import 'package:admin/module/dashboard/dash_super_admin/controllers/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

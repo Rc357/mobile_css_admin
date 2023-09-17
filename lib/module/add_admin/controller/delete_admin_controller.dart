@@ -59,11 +59,11 @@ class DeleteAdminController extends GetxController {
 
   void deleteAdmin(AdminModel adminData) async {
     _status.value = DeleteAdminStatus.loading;
-    MyLogger.printError('ADMIN ID : ${adminData.id}');
+    MyLogger.printInfo('ADMIN ID : ${adminData.id}');
     try {
       await AddAdminRepository.deleteAdmin(adminId: adminData.id);
       _status.value = DeleteAdminStatus.deleted;
-      MyLogger.printError(currentState());
+      MyLogger.printInfo(currentState());
       AppSnackbar.showSuccessInfo(
         title: 'Success',
         message: 'Admin successfully deleted. ',
