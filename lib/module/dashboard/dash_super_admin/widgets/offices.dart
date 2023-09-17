@@ -160,7 +160,7 @@ class OfficesListCard extends GetView<MainScreenController> {
                           .toString(),
                       average: securityOfficeBarGraphController
                                   .totalAverageFivePoints.value !=
-                              0
+                              0.0
                           ? securityOfficeBarGraphController
                               .totalAverageFivePoints.value
                           : securityOfficeBarGraphController

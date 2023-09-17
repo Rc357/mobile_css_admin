@@ -300,14 +300,23 @@ class RegistrarBarGraphController extends GetxController {
         no.value += i.no;
       }
     }
+    final totalAll = (excellent.value * 5 +
+        verySatisfactory.value * 4 +
+        satisfactory.value * 3 +
+        fair.value * 2 +
+        poor.value);
 
-    totalAverageFivePoints.value = (excellent.value * 5 +
-            verySatisfactory.value * 4 +
-            satisfactory.value * 3 +
-            fair.value * 2 +
-            poor.value) /
-        5;
-    totalAverageTwoPoints.value = (yes.value * 5 + no.value * 4) / 2;
+    if (totalAll != 0) {
+      totalAverageFivePoints.value = totalAll /
+          (excellent.value +
+              verySatisfactory.value +
+              satisfactory.value +
+              fair.value +
+              poor.value);
+    }
+
+    totalAverageTwoPoints.value =
+        (yes.value * 1 + no.value * 0) / (yes.value + no.value);
   }
 
   void getLatestVersion() async {
