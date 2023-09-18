@@ -46,8 +46,15 @@ class OfficesCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Most User Type Visitor : '),
+                        Text('Most User Type Visitor: '),
                         Text(officesArgsData.mostVisitedUser),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Questionnaire Type: '),
+                        Text(officesArgsData.questionnaireType),
                       ],
                     ),
                     Row(
@@ -56,9 +63,6 @@ class OfficesCard extends StatelessWidget {
                         Text('Questionnaire version available: '),
                         Text(officesArgsData.availableVersion),
                       ],
-                    ),
-                    SizedBox(
-                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

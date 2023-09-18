@@ -1,4 +1,5 @@
 import 'package:admin/enums/question_type_enum.dart';
+import 'package:admin/module/dashboard/components/rating_each_number.dart';
 import 'package:admin/module/dashboard/dash_security_office/controller/bar_graph_controller.dart';
 import 'package:admin/widgets/loading_indicator_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -148,24 +149,49 @@ class SecurityOfficeBarChartWidget
         SizedBox(
           height: 15,
         ),
-        Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              buildLegend('Excellent', Colors.blue),
-              buildLegend('Very Satisfactory', Colors.green),
-              buildLegend('Satisfactory', Colors.yellow),
-              buildLegend('Fair', Colors.orange),
-              buildLegend('Poor', Colors.red),
-            ],
+        if (controller.typeOfQuestionnaire.value == 'Five Points Case')
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildLegend('Excellent', Colors.blue),
+                buildLegend('Very Satisfactory', Colors.green),
+                buildLegend('Satisfactory', Colors.yellow),
+                buildLegend('Fair', Colors.orange),
+                buildLegend('Poor', Colors.red),
+              ],
+            ),
           ),
-        ),
+        if (controller.typeOfQuestionnaire.value == 'Two Points Case')
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildLegend('Yes', Colors.blue),
+                buildLegend('No', Colors.red),
+              ],
+            ),
+          ),
         Obx(() =>
             Text("Total Number of Respondents: ${controller.users.length}",
                 style: TextStyle(
                   color: Color(0xff0262AC),
                   fontSize: 18,
                 ))),
+        SizedBox(
+          height: 10,
+        ),
+        Obx(
+          () => controller.isLoading
+              ? Center(
+                  child: LoadingIndicator(color: Colors.blue),
+                )
+              : controller.eachNumAverageList.length != 0
+                  ? RatingEachNumber(
+                      questionAverageList: controller.eachNumAverageList,
+                    )
+                  : SizedBox(),
+        )
       ],
     );
   }

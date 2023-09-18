@@ -4,6 +4,7 @@ import 'package:admin/enums/type_user_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
 import 'package:admin/instances/firebase_instances.dart';
 import 'package:admin/models/admin_model.dart';
+import 'package:admin/models/question_average_model.dart';
 import 'package:admin/models/question_model.dart';
 import 'package:admin/models/survey_remarks.dart';
 import 'package:admin/models/user_security_office_model.dart';
@@ -58,6 +59,9 @@ class SecurityOfficeBarGraphController extends GetxController {
   final intervalNumber = 1.0.obs;
 
   final kFlutterHashtags = [].obs;
+
+  final typeOfQuestionnaire = ''.obs;
+  final eachNumAverageList = <QuestionAverage>[].obs;
 
   final List<Color> fixedColors = [
     Colors.blue,
@@ -295,30 +299,51 @@ class SecurityOfficeBarGraphController extends GetxController {
         satisfactory.value += i.satisfactory;
         fair.value += i.fair;
         poor.value += i.poor;
+
+        eachNumAverageList.add(QuestionAverage(
+            question: i.question,
+            average: (i.excellent * 5 +
+                    i.verySatisfactory * 4 +
+                    i.satisfactory * 3 +
+                    i.fair * 2 +
+                    i.poor) /
+                users.length));
       }
       if (i.type == QuestionTypeEnum.twoPointsCase) {
         yes.value += i.yes;
         no.value += i.no;
+
+        eachNumAverageList.add(QuestionAverage(
+            question: i.question,
+            average: (i.yes * 1 + i.no * 0) / users.length));
       }
     }
 
-    final totalAll = (excellent.value * 5 +
-        verySatisfactory.value * 4 +
-        satisfactory.value * 3 +
-        fair.value * 2 +
-        poor.value);
-
-    if (totalAll != 0) {
-      totalAverageFivePoints.value = totalAll /
-          (excellent.value +
-              verySatisfactory.value +
-              satisfactory.value +
-              fair.value +
-              poor.value);
+    if (excellent.value != 0 ||
+        verySatisfactory.value != 0 ||
+        satisfactory.value != 0 ||
+        fair.value != 0 ||
+        poor.value != 0) {
+      final totalAll = (excellent.value * 5 +
+          verySatisfactory.value * 4 +
+          satisfactory.value * 3 +
+          fair.value * 2 +
+          poor.value);
+      if (totalAll != 0) {
+        totalAverageFivePoints.value = totalAll /
+            (excellent.value +
+                verySatisfactory.value +
+                satisfactory.value +
+                fair.value +
+                poor.value);
+        typeOfQuestionnaire.value = 'Five Points Case';
+      }
     }
-
-    totalAverageTwoPoints.value =
-        (yes.value * 1 + no.value * 0) / (yes.value + no.value);
+    if (yes.value != 0 || no.value != 0) {
+      totalAverageTwoPoints.value =
+          (yes.value * 1 + no.value * 0) / (yes.value + no.value);
+      typeOfQuestionnaire.value = 'Two Points Case';
+    }
   }
 
   void getLatestVersion() async {

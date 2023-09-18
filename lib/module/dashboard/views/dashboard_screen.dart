@@ -18,6 +18,7 @@ import 'package:admin/module/dashboard/dash_security_office/widgets/respondents_
 import 'package:admin/module/dashboard/dash_super_admin/widgets/header.dart';
 import 'package:admin/module/dashboard/dash_super_admin/widgets/header2.dart';
 import 'package:admin/module/dashboard/dash_super_admin/widgets/offices.dart';
+
 import 'package:admin/module/main/controller/main_screen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -111,20 +112,10 @@ class DashboardScreen extends GetView<DashboardController> {
                                                   Column(
                                                     children: [
                                                       Header(),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
+                                                      SizedBox(height: 10),
                                                       Divider(),
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(25.0),
-                                                        child:
-                                                            OfficesListCard(),
-                                                      ),
+                                                      SizedBox(height: 10),
+                                                      OfficesListCard(),
                                                     ],
                                                   ),
                                                 if (dashSuperAdminGraphController
@@ -137,9 +128,7 @@ class DashboardScreen extends GetView<DashboardController> {
                                                           height:
                                                               defaultPadding),
                                                       AdminOfficeBarChartWidget(),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
+                                                      SizedBox(height: 40),
                                                       AdminOfficeRespondentsWidget()
                                                     ],
                                                   ),
