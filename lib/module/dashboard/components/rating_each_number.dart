@@ -123,7 +123,7 @@ class RatingEachNumber extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text('${average.toStringAsFixed(2)}.'),
+                  Text('${average.toStringAsFixed(2)}'),
                 ],
               ),
             ],
