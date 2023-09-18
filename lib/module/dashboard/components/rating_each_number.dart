@@ -89,7 +89,7 @@ class RatingEachNumber extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '$overAllAverage',
+                              '${overAllAverage.toStringAsFixed(2)}',
                               style: TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ],

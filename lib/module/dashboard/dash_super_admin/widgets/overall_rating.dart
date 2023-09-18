@@ -44,14 +44,20 @@ class OverAllRating extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Average Rating of All Offices: '),
+                        Text(
+                          'Average Rating of All Offices: ',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         Text(averageRating.toStringAsFixed(2)),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Office With Highest Rating: '),
+                        Text(
+                          'Office With Highest Rating: ',
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         Text(officeWithHighestRate),
                       ],
                     ),
