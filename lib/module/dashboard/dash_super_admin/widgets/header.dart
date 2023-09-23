@@ -17,8 +17,8 @@ class Header extends GetView<DashboardController> {
     return Row(
       children: [
         Text(
-          "Dashboard",
-          style: Theme.of(context).textTheme.titleLarge,
+          "Dashboard".toUpperCase(),
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32),
         ),
         Spacer(),
         ProfileCard()
@@ -38,7 +38,6 @@ class ProfileCard extends GetView<DashboardController> {
       margin: EdgeInsets.only(left: defaultPadding),
       padding: EdgeInsets.symmetric(
         horizontal: defaultPadding,
-        vertical: defaultPadding / 2,
       ),
       decoration: BoxDecoration(
         color: secondaryColor,

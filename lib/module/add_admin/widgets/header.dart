@@ -51,7 +51,7 @@ class ProfileCard extends StatelessWidget {
       margin: EdgeInsets.only(left: defaultPadding),
       padding: EdgeInsets.symmetric(
         horizontal: defaultPadding,
-        vertical: defaultPadding / 2,
+        // vertical: defaultPadding / 2,
       ),
       decoration: BoxDecoration(
         color: secondaryColor,

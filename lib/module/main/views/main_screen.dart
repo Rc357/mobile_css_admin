@@ -34,9 +34,11 @@ class MainScreen extends StatelessWidget {
                   flex: 5,
                   child: mainScreenController.currentScreenIndex.value == 0
                       ? DashboardScreen()
-                      : mainScreenController.currentScreenIndex.value == 1
-                          ? AddAdminScreen()
-                          : VersionSelection()),
+                      : mainScreenController.currentScreenIndex.value == 7
+                          ? Center(child: Text('NO CONTEXT AVAILABLE'))
+                          : mainScreenController.currentScreenIndex.value == 1
+                              ? AddAdminScreen()
+                              : VersionSelection()),
             ),
           ],
         ),

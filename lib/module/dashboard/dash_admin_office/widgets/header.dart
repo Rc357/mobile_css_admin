@@ -38,8 +38,9 @@ class AdminOfficeHeader extends GetView<DashboardController> {
           ),
         if (!isSuperAdmin)
           Text(
-            "Dashboard",
-            style: Theme.of(context).textTheme.titleLarge,
+            "Dashboard".toUpperCase(),
+            style:
+                Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32),
           ),
         Expanded(
             child: Row(
@@ -70,7 +71,7 @@ class AdminOfficeProfileCard extends GetView<DashboardController> {
       margin: EdgeInsets.only(left: defaultPadding),
       padding: EdgeInsets.symmetric(
         horizontal: defaultPadding,
-        vertical: defaultPadding / 2,
+        // vertical: defaultPadding / 2,
       ),
       decoration: BoxDecoration(
         color: secondaryColor,
