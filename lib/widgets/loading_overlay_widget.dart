@@ -15,9 +15,9 @@ class LoadingOverlay extends StatelessWidget {
         ? Container(
             height: double.infinity,
             width: double.infinity,
-            color: Colors.blue,
+            color: Colors.blue.shade50.withOpacity(0.3),
             child: const Center(
-              child: LoadingIndicator(color: Colors.white),
+              child: LoadingIndicator(color: Colors.blue),
             ),
           )
         : const SizedBox();

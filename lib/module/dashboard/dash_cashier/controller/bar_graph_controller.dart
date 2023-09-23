@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:pdf/widgets.dart ' as pw;
+import 'package:universal_html/html.dart' as html;
+import 'package:screenshot/screenshot.dart';
 import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/enums/type_user_enum.dart';
 import 'package:admin/helper/my_logger_helper.dart';
@@ -377,6 +380,33 @@ class CashierBarGraphController extends GetxController {
 
     await getUserTotals(officeNameUser);
     setInterval();
+  }
+
+  Future<void> generatePdf(ScreenshotController controller) async {
+    final image = await controller.capture();
+    final pdf = pw.Document();
+
+    // Convert the captured image to PDF
+    if (image != null) {
+      final imagePdf = pw.MemoryImage(image);
+      pdf.addPage(pw.Page(
+        build: (context) {
+          return pw.Column(children: [
+            pw.Text('Cashier Office'),
+            pw.Image(imagePdf),
+          ]);
+        },
+      ));
+
+      final pdfBytes = await pdf.save();
+      final blob = html.Blob([pdfBytes], 'application/pdf');
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      html.AnchorElement(href: url)
+        ..setAttribute(
+            "download", "cashier_office_questionnaire_${version.value}.pdf")
+        ..click();
+      html.Url.revokeObjectUrl(url);
+    }
   }
 
   void getRemarksList() async {

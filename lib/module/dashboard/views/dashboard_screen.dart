@@ -1,22 +1,11 @@
 import 'package:admin/enums/admin_enum.dart';
+import 'package:admin/module/dashboard/dash_admin_office/view/dash_admin.dart';
+import 'package:admin/module/dashboard/dash_cashier/view/dash_cashier.dart';
+import 'package:admin/module/dashboard/dash_library/view/dash_library.dart';
+import 'package:admin/module/dashboard/dash_registrar/view/dash_registrar.dart';
+import 'package:admin/module/dashboard/dash_security_office/views/dash_security_office.dart';
 import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
-import 'package:admin/module/dashboard/dash_admin_office/widgets/app_bar_widget.dart';
-import 'package:admin/module/dashboard/dash_admin_office/widgets/header.dart';
-import 'package:admin/module/dashboard/dash_admin_office/widgets/respondents_widget.dart';
-import 'package:admin/module/dashboard/dash_cashier/widgets/app_bar_widget.dart';
-import 'package:admin/module/dashboard/dash_cashier/widgets/header.dart';
-import 'package:admin/module/dashboard/dash_cashier/widgets/respondents_widget.dart';
-import 'package:admin/module/dashboard/dash_library/widgets/app_bar_widget.dart';
-import 'package:admin/module/dashboard/dash_library/widgets/header.dart';
-import 'package:admin/module/dashboard/dash_library/widgets/respondents_widget.dart';
-import 'package:admin/module/dashboard/dash_registrar/widgets/app_bar_widget.dart';
-import 'package:admin/module/dashboard/dash_registrar/widgets/header.dart';
-import 'package:admin/module/dashboard/dash_registrar/widgets/respondents_widget.dart';
-import 'package:admin/module/dashboard/dash_security_office/widgets/app_bar_widget.dart';
-import 'package:admin/module/dashboard/dash_security_office/widgets/header.dart';
-import 'package:admin/module/dashboard/dash_security_office/widgets/respondents_widget.dart';
 import 'package:admin/module/dashboard/dash_super_admin/widgets/header.dart';
-import 'package:admin/module/dashboard/dash_super_admin/widgets/header2.dart';
 import 'package:admin/module/dashboard/dash_super_admin/widgets/offices.dart';
 
 import 'package:admin/module/main/controller/main_screen_controller.dart';
@@ -39,69 +28,20 @@ class DashboardScreen extends GetView<DashboardController> {
               () => controller.adminData.value != null
                   ? controller.adminData.value!.adminType ==
                           AdminTypeEnum.LibraryAdmin
-                      ? Column(
-                          children: [
-                            LibraryHeader(),
-                            SizedBox(height: defaultPadding),
-                            LibraryBarChartWidget(),
-                            SizedBox(
-                              height: 40,
-                            ),
-                            LibraryRespondentsWidget()
-                          ],
-                        )
+                      ? DashLibraryView(isSuperAdmin: false)
                       : controller.adminData.value!.adminType ==
                               AdminTypeEnum.Admin
-                          ? Column(
-                              children: [
-                                AdminOfficeHeader(),
-                                SizedBox(height: defaultPadding),
-                                AdminOfficeBarChartWidget(),
-                                SizedBox(
-                                  height: 40,
-                                ),
-                                AdminOfficeRespondentsWidget()
-                              ],
-                            )
+                          ? DashAdminView(isSuperAdmin: false)
                           : controller.adminData.value!.adminType ==
                                   AdminTypeEnum.CashierAdmin
-                              ? Column(
-                                  children: [
-                                    CashierHeader(),
-                                    SizedBox(height: defaultPadding),
-                                    CashierBarChartWidget(),
-                                    SizedBox(
-                                      height: 40,
-                                    ),
-                                    CashierRespondentsWidget()
-                                  ],
-                                )
+                              ? DashCashierView(isSuperAdmin: false)
                               : controller.adminData.value!.adminType ==
                                       AdminTypeEnum.RegistrarAdmin
-                                  ? Column(
-                                      children: [
-                                        RegistrarHeader(),
-                                        SizedBox(height: defaultPadding),
-                                        RegistrarBarChartWidget(),
-                                        SizedBox(
-                                          height: 40,
-                                        ),
-                                        RegistrarRespondentsWidget()
-                                      ],
-                                    )
+                                  ? DashRegistrarView(isSuperAdmin: false)
                                   : controller.adminData.value!.adminType ==
                                           AdminTypeEnum.SecurityAdmin
-                                      ? Column(
-                                          children: [
-                                            SecurityOfficeHeader(),
-                                            SizedBox(height: defaultPadding),
-                                            SecurityOfficeBarChartWidget(),
-                                            SizedBox(
-                                              height: 40,
-                                            ),
-                                            SecurityOfficeRespondentsWidget()
-                                          ],
-                                        )
+                                      ? DashSecurityOfficeView(
+                                          isSuperAdmin: false)
                                       : controller.adminData.value!.adminType ==
                                               AdminTypeEnum.SuperAdmin
                                           ? Column(
@@ -121,82 +61,30 @@ class DashboardScreen extends GetView<DashboardController> {
                                                 if (dashSuperAdminGraphController
                                                         .adminView.value ==
                                                     AdminTypeEnum.Admin)
-                                                  Column(
-                                                    children: [
-                                                      Header2(),
-                                                      SizedBox(
-                                                          height:
-                                                              defaultPadding),
-                                                      AdminOfficeBarChartWidget(),
-                                                      SizedBox(height: 40),
-                                                      AdminOfficeRespondentsWidget()
-                                                    ],
+                                                  DashAdminView(
+                                                    isSuperAdmin: true,
                                                   ),
                                                 if (dashSuperAdminGraphController
                                                         .adminView.value ==
                                                     AdminTypeEnum.CashierAdmin)
-                                                  Column(
-                                                    children: [
-                                                      Header2(),
-                                                      SizedBox(
-                                                          height:
-                                                              defaultPadding),
-                                                      CashierBarChartWidget(),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
-                                                      CashierRespondentsWidget()
-                                                    ],
-                                                  ),
+                                                  DashCashierView(
+                                                      isSuperAdmin: true),
                                                 if (dashSuperAdminGraphController
                                                         .adminView.value ==
                                                     AdminTypeEnum.LibraryAdmin)
-                                                  Column(
-                                                    children: [
-                                                      Header2(),
-                                                      SizedBox(
-                                                          height:
-                                                              defaultPadding),
-                                                      LibraryBarChartWidget(),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
-                                                      LibraryRespondentsWidget()
-                                                    ],
-                                                  ),
+                                                  DashLibraryView(
+                                                      isSuperAdmin: true),
                                                 if (dashSuperAdminGraphController
                                                         .adminView.value ==
                                                     AdminTypeEnum
                                                         .RegistrarAdmin)
-                                                  Column(
-                                                    children: [
-                                                      Header2(),
-                                                      SizedBox(
-                                                          height:
-                                                              defaultPadding),
-                                                      RegistrarBarChartWidget(),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
-                                                      RegistrarRespondentsWidget()
-                                                    ],
-                                                  ),
+                                                  DashRegistrarView(
+                                                      isSuperAdmin: true),
                                                 if (dashSuperAdminGraphController
                                                         .adminView.value ==
                                                     AdminTypeEnum.SecurityAdmin)
-                                                  Column(
-                                                    children: [
-                                                      Header2(),
-                                                      SizedBox(
-                                                          height:
-                                                              defaultPadding),
-                                                      SecurityOfficeBarChartWidget(),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
-                                                      SecurityOfficeRespondentsWidget()
-                                                    ],
-                                                  ),
+                                                  DashSecurityOfficeView(
+                                                      isSuperAdmin: true),
                                               ],
                                             )
                                           : SizedBox()

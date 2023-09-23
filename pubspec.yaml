@@ -51,6 +51,8 @@ dependencies:
   universal_html: ^2.2.3
   cached_network_image: ^3.2.3
   firebase_admin: ^0.2.0-dev.7
+  pdf: ^3.10.4
+  screenshot: ^2.1.0
 
 dev_dependencies:
   flutter_test:

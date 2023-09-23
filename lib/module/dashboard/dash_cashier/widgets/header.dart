@@ -1,5 +1,6 @@
 import 'package:admin/module/dashboard/dash_cashier/controller/bar_graph_controller.dart';
 import 'package:admin/module/dashboard/dash_cashier/widgets/version_dropdown_widget.dart';
+import 'package:admin/module/dashboard/dash_super_admin/widgets/super_admin_header.dart';
 import 'package:admin/module/dashboard/dash_super_admin/widgets/tool_tip.dart';
 import 'package:admin/responsive.dart';
 import 'package:admin/module/dashboard/dash_super_admin/controllers/MenuAppController.dart';
@@ -10,20 +11,49 @@ import 'package:get/get.dart';
 import '../../../../constants.dart';
 
 class CashierHeader extends GetView<DashboardController> {
-  CashierHeader({
-    Key? key,
-  }) : super(key: key);
+  final Function()? onClick;
+  final bool isSuperAdmin;
+  CashierHeader({Key? key, this.onClick, this.isSuperAdmin = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "Dashboard",
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        Expanded(child: CashierDropDown()),
-        CashierProfileCard()
+        if (isSuperAdmin)
+          Row(
+            children: [
+              Text(
+                "Dashboard",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: Colors.blue),
+              ),
+              Text(
+                "> Cashier ",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ],
+          ),
+        if (!isSuperAdmin)
+          Text(
+            "Dashboard",
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        Expanded(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CashierDropDown(),
+            SizedBox(
+              width: 10,
+            ),
+            GestureDetector(onTap: onClick, child: Text('Download')),
+          ],
+        )),
+        if (isSuperAdmin) SuperAdminProfileCard(),
+        if (!isSuperAdmin) CashierProfileCard()
       ],
     );
   }
@@ -73,29 +103,16 @@ class CashierDropDown extends GetView<CashierBarGraphController> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Container(
-          width: 200,
-          child: CashierVersionDropdown(
-            onChanged: (value) {
-              if (value == null) {
-                return;
-              }
-              controller.setVersion(value);
-            },
-          ),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        GestureDetector(
-            onTap: () {
-              controller.getRemarksList();
-            },
-            child: Text('Download')),
-      ],
+    return Container(
+      width: 200,
+      child: CashierVersionDropdown(
+        onChanged: (value) {
+          if (value == null) {
+            return;
+          }
+          controller.setVersion(value);
+        },
+      ),
     );
   }
 }

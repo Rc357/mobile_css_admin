@@ -49,6 +49,7 @@ class MyApp extends StatelessWidget {
 
 // run command
 // flutter run -d chrome --web-renderer html
+// flutter run -d chrome --web-renderer canvaskit
 // flutter build web
 // firebase deploy 
 // or this firebase deploy --only hosting:mobile-css-admin

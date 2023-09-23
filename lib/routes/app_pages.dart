@@ -95,7 +95,6 @@ class AppPages {
     GetPage(
       name: _Paths.PREVIEW_IMAGE,
       page: () => PreviewImageWidget(),
-      // binding: AddSurveyBinding(),
     ),
     GetPage(
       name: _Paths.FORGET_PASSWORD,
