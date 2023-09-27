@@ -41,7 +41,7 @@ class CashierUserCardWidget extends GetView<CashierController> {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
-          width: MediaQuery.of(context).size.width * .7,
+          width: MediaQuery.of(context).size.width * .8,
           height: MediaQuery.of(context).size.height * .07,
           decoration: BoxDecoration(
               color: Color(0xFFD9D9D9),
@@ -59,14 +59,14 @@ class CashierUserCardWidget extends GetView<CashierController> {
               ),
             ),
             Expanded(
-                flex: 3,
+                flex: 4,
                 child: Text(name,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
                     ))),
             Expanded(
-                flex: 2,
+                flex: 3,
                 child: Text(visitedTime,
                     style: TextStyle(
                       color: Colors.black,
@@ -80,31 +80,9 @@ class CashierUserCardWidget extends GetView<CashierController> {
                       fontSize: 14,
                     ))),
             Expanded(
-                flex: 2,
+                flex: 1,
                 child: Row(
                   children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height * .03,
-                      decoration: BoxDecoration(
-                          color: Color(0xFF0099CB),
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      child: Row(children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text('Answer Survey',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        )
-                      ]),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .01,
-                    ),
                     isAnswered
                         ? Icon(
                             Icons.done,

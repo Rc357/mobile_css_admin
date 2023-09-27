@@ -1,4 +1,5 @@
 import 'package:admin/module/dashboard_library/widgets/user_card.dart';
+import 'package:admin/widgets/respondent_header.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -40,7 +41,7 @@ class LibraryScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 24),
               ),
-              buildHeader(context),
+              RespondentsHeader(),
               UserCardWidget(),
             ],
           ),
@@ -48,42 +49,4 @@ class LibraryScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget buildHeader(
-    BuildContext context,
-  ) =>
-      Container(
-        width: MediaQuery.of(context).size.width * .8,
-        height: MediaQuery.of(context).size.height * .07,
-        child: Row(children: [
-          Expanded(
-            flex: 4,
-            child: Text('Name',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                )),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text('Visited Time',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                )),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text('Identity',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                )),
-          ),
-          Expanded(flex: 2, child: Row()),
-        ]),
-      );
 }
