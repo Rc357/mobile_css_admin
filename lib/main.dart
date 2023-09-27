@@ -53,4 +53,4 @@ class MyApp extends StatelessWidget {
 // flutter build web
 // firebase deploy 
 // or this firebase deploy --only hosting:mobile-css-admin
-// web URL https://mobilecss-f5a85.web.app
+// web URL  https://mobile-css-admin.web.app

@@ -1,10 +1,17 @@
 {
   "hosting": {
-    "public": "build/web",
+    "site": "mobile-css-admin",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
