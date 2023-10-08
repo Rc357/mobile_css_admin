@@ -36,7 +36,7 @@ class DeleteQuestionDialog extends GetView<DeleteSurveyController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'The question: ${questionData.question} with ${questionData.type.description} of answer will permanently deleted.',
+                  'The question: ${questionData.question} with ${questionData.type.description} of answer will permanently deleted.\nAll the data related to this question will be lost.',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

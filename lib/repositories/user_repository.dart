@@ -230,4 +230,21 @@ class UserRepository {
       rethrow;
     }
   }
+
+  static Future<void> updateUserViaVersion(
+      String officeName, int version) async {
+    MyLogger.printInfo('Office : $officeName, version : $version');
+    var collection = firestore.collection(officeName);
+
+    try {
+      QuerySnapshot querySnapshot =
+          await collection.where(_version, isEqualTo: version).get();
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await collection.doc(documentSnapshot.id).delete();
+      }
+    } catch (e) {
+      MyLogger.printError("updateUserViaVersion ERROR: $e");
+      return;
+    }
+  }
 }

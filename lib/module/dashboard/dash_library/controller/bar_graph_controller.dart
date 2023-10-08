@@ -251,7 +251,7 @@ class LibraryBarGraphController extends GetxController {
     users.value = await UserRepository.getUsersLibraryAnswered(
         office: officeName, version: version.value);
 
-    MyLogger.printInfo('users.length : ${users.length}');
+    MyLogger.printInfo('users.length Library: ${users.length}');
 
     for (int i = 0; i < users.length; i++) {
       if (users[i].userType == UserTypeEnum.alumni) {

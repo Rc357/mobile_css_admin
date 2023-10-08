@@ -47,10 +47,15 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// run command
+// *update pub resources
+// flutter pub get
+// *run command
 // flutter run -d chrome --web-renderer html
+// *or
 // flutter run -d chrome --web-renderer canvaskit
+// *build command
 // flutter build web
+// *deploy command
 // firebase deploy 
 // or this firebase deploy --only hosting:mobile-css-admin
 // web URL  https://mobile-css-admin.web.app

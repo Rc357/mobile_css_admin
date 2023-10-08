@@ -89,7 +89,7 @@ class QuestionnaireVersionCardWidget
                       )),
                 ],
               ),
-              trailing: TooltipWithActions(version),
+              trailing: TooltipWithActions(version, controller.args),
             ),
           ),
         ),
@@ -99,8 +99,9 @@ class QuestionnaireVersionCardWidget
 }
 
 class TooltipWithActions extends StatelessWidget {
-  TooltipWithActions(this.question);
+  TooltipWithActions(this.question, this.argumentsToPass);
   final QuestionnaireVersionModel question;
+  final ArgumentsToPass argumentsToPass;
 
   // final editSurveyVersionController = EditSurveyVersionController.instance;
   @override
@@ -149,7 +150,8 @@ class TooltipWithActions extends StatelessWidget {
                   Navigator.pop(context); // Close the popup menu
                   await showDialog(
                     context: context,
-                    builder: (context) => DeleteQuestionVersionDialog(question),
+                    builder: (context) =>
+                        DeleteQuestionVersionDialog(question, argumentsToPass),
                   );
                 },
               ),

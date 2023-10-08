@@ -72,6 +72,23 @@ class QuestionsRepository {
     }
   }
 
+  static Future<void> deleteQuestionAdminViaVersion(
+      String officeName, int version) async {
+    MyLogger.printInfo('Office : $officeName, version : $version');
+    var collection = firestore.collection(officeName);
+
+    try {
+      QuerySnapshot querySnapshot =
+          await collection.where(_version, isEqualTo: version).get();
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await collection.doc(documentSnapshot.id).delete();
+      }
+    } catch (e) {
+      MyLogger.printError("deleteQuestionAdmin VERSION AND QUESTION ERROR: $e");
+      return;
+    }
+  }
+
   static Future<List<QuestionModel>> getQuestions(
       String office, int version) async {
     MyLogger.printInfo("office: $office, version: $version");
@@ -115,6 +132,23 @@ class QuestionsRepository {
     } catch (e) {
       MyLogger.printError("deleteMessageAdmin ERROR: $e");
       return false;
+    }
+  }
+
+  static Future<void> deleteMessageAdminViaVersion(
+      String officeName, int version) async {
+    MyLogger.printInfo('Office : $officeName, version : $version');
+    var collection = firestore.collection(officeName);
+
+    try {
+      QuerySnapshot querySnapshot =
+          await collection.where(_version, isEqualTo: version).get();
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await collection.doc(documentSnapshot.id).delete();
+      }
+    } catch (e) {
+      MyLogger.printError("deleteQuestionAdmin VERSION AND REGARDS  ERROR: $e");
+      return;
     }
   }
 

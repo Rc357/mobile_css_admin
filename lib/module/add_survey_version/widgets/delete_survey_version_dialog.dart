@@ -1,3 +1,4 @@
+import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/models/questionnaire_version_model.dart';
 import 'package:admin/module/add_survey_version/controller/delete_survey_version_controller.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,9 @@ import 'package:get/get.dart';
 
 class DeleteQuestionVersionDialog
     extends GetView<DeleteSurveyVersionController> {
-  DeleteQuestionVersionDialog(this.questionData);
+  DeleteQuestionVersionDialog(this.questionData, this.argumentsToPass);
   final QuestionnaireVersionModel questionData;
+  final ArgumentsToPass argumentsToPass;
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
@@ -16,7 +18,7 @@ class DeleteQuestionVersionDialog
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Are you sure you want to delete this question?',
+              'Are you sure you want to delete this version?',
             ),
             SizedBox(
               height: 10,
@@ -36,7 +38,7 @@ class DeleteQuestionVersionDialog
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'The questionnaire version ${questionData.questionnaireVersion} will permanently deleted.',
+                  "The questionnaire version ${questionData.questionnaireVersion} will permanently deleted.\nAll the data related to this version will be lost.",
                   style: TextStyle(fontSize: 16),
                 ),
               ],
@@ -47,7 +49,8 @@ class DeleteQuestionVersionDialog
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
-              controller.deleteQuestion(questionData.id);
+              controller.deleteQuestion(questionData.id,
+                  questionData.questionnaireVersion, argumentsToPass);
             },
             child: Container(
                 width: MediaQuery.of(context).size.width * .05,

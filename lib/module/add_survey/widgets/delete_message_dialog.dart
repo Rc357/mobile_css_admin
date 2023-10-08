@@ -16,7 +16,7 @@ class DeleteMessageDialog extends GetView<DeleteMessageController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Are you sure you want to delete this question?',
+              'Are you sure you want to delete this message?',
             ),
             SizedBox(
               height: 10,
@@ -36,7 +36,7 @@ class DeleteMessageDialog extends GetView<DeleteMessageController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '"${messageData.message}" will permanently deleted.',
+                  '"${messageData.message}" will permanently deleted.\nAll the data related to this message will be lost.',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:admin/models/argument_to_pass.dart';
 import 'package:admin/module/add_survey_version/controller/add_survey_version_controller.dart';
 import 'package:admin/repositories/questions_repository.dart';
+import 'package:admin/repositories/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:admin/helper/my_logger_helper.dart';
@@ -59,11 +60,23 @@ class DeleteSurveyVersionController extends GetxController {
     );
   }
 
-  void deleteQuestion(String questionId) async {
+  void deleteQuestion(String questionId, int questionVersion,
+      ArgumentsToPass argumentsToPass) async {
     _status.value = DeleteSurveyVersionStatus.loading;
 
     final isSuccess = await QuestionsRepository.deleteQuestionnaireVersionAdmin(
         questionId, args.questionnaireOffice);
+
+    await QuestionsRepository.deleteQuestionAdminViaVersion(
+        argumentsToPass.questionAdminName, questionVersion);
+
+    await QuestionsRepository.deleteMessageAdminViaVersion(
+        argumentsToPass.regardsAdminName, questionVersion);
+
+    final officeName = argumentsToPass.adminName == "Admin's Office"
+        ? 'userAdminsOffice'
+        : 'user' + argumentsToPass.adminName.removeAllWhitespace;
+    await UserRepository.updateUserViaVersion(officeName, questionVersion);
 
     if (isSuccess) {
       Get.snackbar(
