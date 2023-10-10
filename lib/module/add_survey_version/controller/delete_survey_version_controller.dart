@@ -73,6 +73,13 @@ class DeleteSurveyVersionController extends GetxController {
     await QuestionsRepository.deleteMessageAdminViaVersion(
         argumentsToPass.regardsAdminName, questionVersion);
 
+    final officeNameRemarks = argumentsToPass.adminName == "Admin's Office"
+        ? 'adminsOffice'
+        : argumentsToPass.adminName.camelCase!;
+
+    await QuestionsRepository.deleteRemarksAdminViaVersion(
+        officeNameRemarks, questionVersion);
+
     final officeName = argumentsToPass.adminName == "Admin's Office"
         ? 'userAdminsOffice'
         : 'user' + argumentsToPass.adminName.removeAllWhitespace;

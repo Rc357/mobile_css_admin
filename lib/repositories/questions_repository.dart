@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuestionsRepository {
   static const String _version = 'version';
+  static const String _officeName = 'officeName';
+  static const String _surveyRemarks = 'surveyRemarks';
 
   static Future<QuestionModel?> findLatestVersion(String office) async {
     final collectionRef = firestore.collection(office);
@@ -148,6 +150,26 @@ class QuestionsRepository {
       }
     } catch (e) {
       MyLogger.printError("deleteQuestionAdmin VERSION AND REGARDS  ERROR: $e");
+      return;
+    }
+  }
+
+  static Future<void> deleteRemarksAdminViaVersion(
+      String officeName, int version) async {
+    MyLogger.printInfo('Office : $officeName, version : $version');
+    var collection = firestore.collection(_surveyRemarks);
+
+    try {
+      QuerySnapshot querySnapshot = await collection
+          .where(_version, isEqualTo: version)
+          .where(_officeName, isEqualTo: officeName)
+          .get();
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await collection.doc(documentSnapshot.id).delete();
+      }
+    } catch (e) {
+      MyLogger.printError(
+          "deleteRemarksAdminViaVersion VERSION AND REMARKS ERROR: $e");
       return;
     }
   }
