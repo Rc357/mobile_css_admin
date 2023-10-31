@@ -35,6 +35,14 @@ class RespondentsHeader extends StatelessWidget {
                   fontSize: 16,
                 ))),
         Expanded(
+            flex: 3,
+            child: Text('Comments/Suggestions',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ))),
+        Expanded(
             flex: 1,
             child: Row(
               children: [

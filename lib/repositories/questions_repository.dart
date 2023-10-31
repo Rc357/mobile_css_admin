@@ -106,6 +106,28 @@ class QuestionsRepository {
     return admins;
   }
 
+  static Future<List<QuestionModel>> getQuestionsFilter(
+      String office, int version, DateTime start, DateTime end) async {
+    MyLogger.printInfo("office: $office, version: $version");
+    // var dateStart = Timestamp.fromDate(start);
+    // var dateEnd = Timestamp.fromDate(end);
+
+    // MyLogger.printInfo("DATE HERE: $dateStart");
+    // MyLogger.printInfo("DATE HERE: ${dateStart.seconds}");
+
+    final collectionRef = firestore.collection(office);
+    final query = collectionRef.where('version', isEqualTo: version);
+    // .where('created_at', isGreaterThanOrEqualTo: dateStart)
+    // .where('created_at', isLessThanOrEqualTo: dateEnd);
+
+    final result = await query.get();
+    final admins = result.docs.map((doc) {
+      final map = doc.data();
+      return QuestionModel.fromMap(map);
+    }).toList();
+    return admins;
+  }
+
   static Future<void> createNewThankYouMessageAdmin(
       ThankYouMessageModel message, String officeName) async {
     try {

@@ -1,4 +1,6 @@
+import 'package:admin/models/user_cashier_model.dart';
 import 'package:admin/module/dashboard_cashier/controllers/cashier_controller.dart';
+import 'package:admin/repositories/remarks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +28,7 @@ class CashierUserCardWidget extends GetView<CashierController> {
                 final user = controller.users[index];
                 return buildUserCard(
                     context,
+                    user,
                     controller.extractInitials(user.name),
                     user.name,
                     DateFormat.yMd().add_jm().format(user.createdAt).toString(),
@@ -36,8 +39,14 @@ class CashierUserCardWidget extends GetView<CashierController> {
     );
   }
 
-  Widget buildUserCard(BuildContext context, String initial, String name,
-          String visitedTime, String identity, bool isAnswered) =>
+  Widget buildUserCard(
+          BuildContext context,
+          UserCashierModel user,
+          String initial,
+          String name,
+          String visitedTime,
+          String identity,
+          bool isAnswered) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
@@ -79,6 +88,7 @@ class CashierUserCardWidget extends GetView<CashierController> {
                       color: Colors.black,
                       fontSize: 14,
                     ))),
+            Expanded(flex: 3, child: getCommentViaUid(user.uid, user.version)),
             Expanded(
                 flex: 1,
                 child: Row(
@@ -97,6 +107,26 @@ class CashierUserCardWidget extends GetView<CashierController> {
           ]),
         ),
       );
+}
+
+Widget getCommentViaUid(String id, int version) {
+  final commentText = 'Show Text'.obs;
+  return GestureDetector(
+    onTap: () async {
+      commentText.value = await getCommentViaUID(id, version);
+    },
+    child: Obx(
+      () => Text(commentText.value,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+          )),
+    ),
+  );
+}
+
+Future<String> getCommentViaUID(String id, int version) async {
+  return await RemarksRepository.getRemarksListViaUID('cashier', id, version);
 }
 
 class TooltipWithActions extends StatelessWidget {

@@ -3,6 +3,7 @@ import 'package:admin/models/questionnaire_version_model.dart';
 import 'package:admin/models/user_admin_office_model.dart';
 import 'package:admin/repositories/user_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum AdminOfficeControllerStatus { initial, fetching, loaded, error }
@@ -11,27 +12,38 @@ class AdminOfficeController extends GetxController {
   static AdminOfficeController get instance => Get.find();
   final status = AdminOfficeControllerStatus.initial.obs;
   final users = <UserAdminOfficeModel>[].obs;
-  final hasReachedMax = false.obs;
 
   final args = Get.arguments as QuestionnaireVersionModel;
 
   late Worker? _statusEverWorker;
+  late Worker? _hasReachedMaxListener;
+
+  final _hasReachedMax = false.obs;
+  bool get hasReachedMax => _hasReachedMax.value;
+  RxBool get hasReachedMaxRx => _hasReachedMax;
+
+  final scrollController = ScrollController();
 
   final userCollectionName = 'userAdminsOffice';
 
   String currentState() =>
-      'AdminOfficeController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${hasReachedMax.value})';
+      'AdminOfficeController(status: ${status.value}, users: ${users.length}, hasReachedMax: ${_hasReachedMax.value})';
 
   @override
   void onInit() {
     _monitorFeedItemsStatus();
     getUserAdminOffice();
+    _setUpHasReachedMaxListener();
+    scrollController.addListener(_monitorScrolling);
     super.onInit();
   }
 
   @override
   void onClose() {
     _statusEverWorker?.dispose();
+    _hasReachedMaxListener?.dispose();
+
+    scrollController.dispose();
     super.onClose();
   }
 
@@ -59,12 +71,36 @@ class AdminOfficeController extends GetxController {
     getUserAdminOffice();
   }
 
+  void _monitorScrolling() {
+    final offset = scrollController.offset;
+    final maxScrollExtent = scrollController.position.maxScrollExtent;
+    final outOfRange = scrollController.position.outOfRange;
+    if (offset >= maxScrollExtent && !outOfRange) {
+      getMoreUsers();
+    }
+  }
+
+  void _setUpHasReachedMaxListener() {
+    final hasReachedMaxRx = _hasReachedMax;
+    _hasReachedMaxListener = ever(hasReachedMaxRx, (value) {
+      if (value == true) {
+        final snackBar = SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Already loaded all users'),
+        );
+        Future.delayed(Duration(seconds: 3)).then((_) {
+          ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+        });
+      }
+    });
+  }
+
   Future<void> getUserAdminOffice() async {
     status.value = AdminOfficeControllerStatus.fetching;
     try {
       users.value = await UserRepository.getUsersAdminOffice(
           office: userCollectionName, version: args.questionnaireVersion);
-      hasReachedMax.value = false;
+      _hasReachedMax.value = false;
       status.value = AdminOfficeControllerStatus.loaded;
     } on FirebaseException catch (e) {
       status.value = AdminOfficeControllerStatus.error;
@@ -75,22 +111,25 @@ class AdminOfficeController extends GetxController {
     }
   }
 
-  Future<void> getMoreItems() async {
+  Future<void> getMoreUsers() async {
     myLogger.i('GETTING MORE USER');
+    myLogger.i('NAME: $userCollectionName');
+    myLogger.i('LAST UID: ${users.last.uid}');
     // We no longer need to change to fetching status
     // to avoid the loading animation which might confuse the user
     status.value = AdminOfficeControllerStatus.initial;
     try {
-      if (hasReachedMax.value == false) {
+      if (_hasReachedMax.value == false) {
         final lastDocumentSnapshot =
-            await UserRepository.getUserDocumentSnapshot(users.last.uid);
+            await UserRepository.getUsersDocumentSnapshot(
+                userCollectionName, users.last.uid);
         final newItems = await UserRepository.getUsersAdminOffice(
             lastDocumentSnapshot: lastDocumentSnapshot,
             office: userCollectionName,
             version: args.questionnaireVersion);
         users.addAll(newItems);
         if (newItems.length < UserRepository.queryLimit) {
-          hasReachedMax.value = true;
+          _hasReachedMax.value = true;
         }
       }
       status.value = AdminOfficeControllerStatus.loaded;

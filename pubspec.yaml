@@ -53,6 +53,8 @@ dependencies:
   firebase_admin: ^0.2.0-dev.7
   pdf: ^3.10.4
   screenshot: ^2.1.0
+  custom_date_range_picker: ^1.0.10
+  syncfusion_flutter_datepicker: ^23.1.41
 
 dev_dependencies:
   flutter_test:

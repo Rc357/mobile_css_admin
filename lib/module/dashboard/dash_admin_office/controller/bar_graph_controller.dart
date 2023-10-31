@@ -98,6 +98,10 @@ class AdminOfficeBarGraphController extends GetxController {
     28,
   ];
 
+  final endDate = DateTime.now().obs;
+  final startDate = DateTime.now().obs;
+  final isViewCalendar = false.obs;
+
   final List<bool> fixedBool = [true, false, false, true, false, false];
 
   String currentState() =>
@@ -162,6 +166,7 @@ class AdminOfficeBarGraphController extends GetxController {
 
     eachNumAverageList.clear();
     kFlutterHashtags.clear();
+    allQuestion.clear();
   }
 
   void setInterval() {
@@ -232,6 +237,11 @@ class AdminOfficeBarGraphController extends GetxController {
     }
   }
 
+  void reloadData() {
+    resetData();
+    getAdminData();
+  }
+
   void setVersion(int versionPass) {
     version.value = versionPass;
     resetData();
@@ -243,7 +253,16 @@ class AdminOfficeBarGraphController extends GetxController {
     adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
 
     await getQuestions();
-    getRemarksList();
+    await getRemarksList();
+  }
+
+  void submitFilterByDate() async {
+    resetData();
+    final currentUser = firebaseAuth.currentUser!;
+    adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
+
+    await getQuestionsFilter();
+    await getRemarksListFilter();
   }
 
   Future<void> getUserTotals(String officeName) async {
@@ -320,8 +339,6 @@ class AdminOfficeBarGraphController extends GetxController {
             question: i.question,
             average: (i.yes * 1 + i.no * 0) / users.length));
       }
-
-      MyLogger.printError("ADDED DATA");
     }
 
     if (excellent.value != 0 ||
@@ -382,7 +399,7 @@ class AdminOfficeBarGraphController extends GetxController {
     await getUserTotals(officeNameUser);
   }
 
-  void getRemarksList() async {
+  Future<void> getRemarksList() async {
     try {
       List<SurveyRemarksModel>? listRemarks =
           await RemarksRepository.getRemarksList('adminsOffice', version.value);
@@ -392,6 +409,68 @@ class AdminOfficeBarGraphController extends GetxController {
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  void setViewCalendar() {
+    isViewCalendar.value = !isViewCalendar.value;
+    MyLogger.printInfo('isViewCalendar.value ${isViewCalendar.value}');
+  }
+
+  Future<void> getQuestionsFilter() async {
+    status.value = AdminOfficeBarGraphControllerStatus.loading;
+
+    try {
+      allQuestion.value = await QuestionsRepository.getQuestionsFilter(
+          officeName, version.value, startDate.value, endDate.value);
+      status.value = AdminOfficeBarGraphControllerStatus.loaded;
+      setInterval();
+      MyLogger.printInfo(currentState());
+    } catch (e) {
+      print('getQuestionsFilter Error: $e');
+      status.value = AdminOfficeBarGraphControllerStatus.error;
+    }
+
+    await getUserTotalsFilter(officeNameUser);
+  }
+
+  Future<void> getRemarksListFilter() async {
+    try {
+      List<SurveyRemarksModel>? listRemarks =
+          await RemarksRepository.getRemarksListFilter(
+              'adminsOffice', version.value, startDate.value, endDate.value);
+      addHashtagData(listRemarks);
+
+      MyLogger.printInfo(currentState());
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> getUserTotalsFilter(String officeName) async {
+    MyLogger.printInfo('getUserTotals');
+    users.value = await UserRepository.getUsersAdminOfficeAnsweredFilter(
+        office: officeName,
+        version: version.value,
+        start: startDate.value,
+        end: endDate.value);
+
+    MyLogger.printInfo('users.length : ${users.length}');
+
+    for (int i = 0; i < users.length; i++) {
+      if (users[i].userType == UserTypeEnum.alumni) {
+        totalAlumni.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.parents) {
+        totalParent.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.guest) {
+        totalGuest.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.student) {
+        totalStudent.value += 1;
+      }
+    }
+    computeAverage();
   }
 
   Future<void> generatePdf(ScreenshotController controller) async {

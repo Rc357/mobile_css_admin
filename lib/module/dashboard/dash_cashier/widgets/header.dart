@@ -12,8 +12,10 @@ import '../../../../constants.dart';
 
 class CashierHeader extends GetView<DashboardController> {
   final Function()? onClick;
+  final Function()? onClickDate;
   final bool isSuperAdmin;
-  CashierHeader({Key? key, this.onClick, this.isSuperAdmin = false})
+  CashierHeader(
+      {Key? key, this.onClick, this.onClickDate, this.isSuperAdmin = false})
       : super(key: key);
 
   @override
@@ -46,11 +48,35 @@ class CashierHeader extends GetView<DashboardController> {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            CashierDropDown(),
+            Container(
+              width: 150,
+              child: ElevatedButton(
+                onPressed: onClick,
+                child: const Text('Download'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  shape: const StadiumBorder(),
+                ),
+              ),
+            ),
             SizedBox(
               width: 10,
             ),
-            GestureDetector(onTap: onClick, child: Text('Download')),
+            Container(
+              width: 150,
+              child: ElevatedButton(
+                onPressed: onClickDate,
+                child: const Text('Filter by Date'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                  shape: const StadiumBorder(),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            CashierDropDown(),
           ],
         )),
         if (isSuperAdmin) SuperAdminProfileCard(),

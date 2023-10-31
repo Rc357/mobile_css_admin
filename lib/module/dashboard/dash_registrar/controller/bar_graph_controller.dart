@@ -97,6 +97,10 @@ class RegistrarBarGraphController extends GetxController {
     28,
   ];
 
+  final endDate = DateTime.now().obs;
+  final startDate = DateTime.now().obs;
+  final isViewCalendar = false.obs;
+
   final List<bool> fixedBool = [true, false, false, true, false, false];
 
   String currentState() =>
@@ -159,7 +163,9 @@ class RegistrarBarGraphController extends GetxController {
     totalAverageFivePoints.value = 0;
     totalAverageTwoPoints.value = 0;
 
+    eachNumAverageList.clear();
     kFlutterHashtags.clear();
+    allQuestion.clear();
   }
 
   void setInterval() {
@@ -230,6 +236,11 @@ class RegistrarBarGraphController extends GetxController {
     }
   }
 
+  void reloadData() {
+    resetData();
+    getAdminData();
+  }
+
   void setVersion(int versionPass) {
     version.value = versionPass;
     resetData();
@@ -241,7 +252,16 @@ class RegistrarBarGraphController extends GetxController {
     adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
 
     await getQuestions();
-    getRemarksList();
+    await getRemarksList();
+  }
+
+  void submitFilterByDate() async {
+    resetData();
+    final currentUser = firebaseAuth.currentUser!;
+    adminData.value = await AddAdminRepository.getAdminViaId(currentUser.uid);
+
+    await getQuestionsFilter();
+    await getRemarksListFilter();
   }
 
   Future<void> getUserTotals(String officeName) async {
@@ -406,7 +426,7 @@ class RegistrarBarGraphController extends GetxController {
     }
   }
 
-  void getRemarksList() async {
+  Future<void> getRemarksList() async {
     try {
       List<SurveyRemarksModel>? listRemarks =
           await RemarksRepository.getRemarksList('registrar', version.value);
@@ -440,5 +460,67 @@ class RegistrarBarGraphController extends GetxController {
   bool getRandomBool() {
     final random = Random();
     return fixedBool[random.nextInt(fixedBool.length)];
+  }
+
+  void setViewCalendar() {
+    isViewCalendar.value = !isViewCalendar.value;
+    MyLogger.printInfo('isViewCalendar.value ${isViewCalendar.value}');
+  }
+
+  Future<void> getQuestionsFilter() async {
+    _status.value = RegistrarBarGraphControllerStatus.loading;
+
+    try {
+      allQuestion.value = await QuestionsRepository.getQuestionsFilter(
+          officeName, version.value, startDate.value, endDate.value);
+      _status.value = RegistrarBarGraphControllerStatus.loaded;
+      setInterval();
+      MyLogger.printInfo(currentState());
+    } catch (e) {
+      print('getQuestionsFilter Error: $e');
+      _status.value = RegistrarBarGraphControllerStatus.error;
+    }
+
+    await getUserTotalsFilter(officeNameUser);
+  }
+
+  Future<void> getRemarksListFilter() async {
+    try {
+      List<SurveyRemarksModel>? listRemarks =
+          await RemarksRepository.getRemarksListFilter(
+              'adminsOffice', version.value, startDate.value, endDate.value);
+      addHashtagData(listRemarks);
+
+      MyLogger.printInfo(currentState());
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> getUserTotalsFilter(String officeName) async {
+    MyLogger.printInfo('getUserTotals');
+    users.value = await UserRepository.getUsersRegistrarOfficeAnsweredFilter(
+        office: officeName,
+        version: version.value,
+        start: startDate.value,
+        end: endDate.value);
+
+    MyLogger.printInfo('users.length : ${users.length}');
+
+    for (int i = 0; i < users.length; i++) {
+      if (users[i].userType == UserTypeEnum.alumni) {
+        totalAlumni.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.parents) {
+        totalParent.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.guest) {
+        totalGuest.value += 1;
+      }
+      if (users[i].userType == UserTypeEnum.student) {
+        totalStudent.value += 1;
+      }
+    }
+    computeAverage();
   }
 }

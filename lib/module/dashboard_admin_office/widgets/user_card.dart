@@ -1,11 +1,48 @@
+import 'package:admin/models/user_admin_office_model.dart';
 import 'package:admin/module/dashboard_admin_office/controllers/admin_office_controller.dart';
+import 'package:admin/repositories/remarks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:admin/models/question_model.dart';
 
-class AdminOfficeUserCardWidget extends GetView<AdminOfficeController> {
+class AdminOfficeUserCardWidget extends StatefulWidget {
   const AdminOfficeUserCardWidget({Key? key}) : super(key: key);
+
+  @override
+  State<AdminOfficeUserCardWidget> createState() =>
+      _AdminOfficeUserCardWidgetState();
+}
+
+class _AdminOfficeUserCardWidgetState extends State<AdminOfficeUserCardWidget> {
+  final controller = AdminOfficeController.instance;
+
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(monitorScrollEvents);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void monitorScrollEvents() {
+    if (_scrollController.position.atEdge) {
+      final isOnTop = _scrollController.position.pixels == 0;
+      if (isOnTop) {
+        print('TOP REACHED');
+      } else {
+        print('BOTTOM REACHED');
+
+        controller.getMoreUsers();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +63,7 @@ class AdminOfficeUserCardWidget extends GetView<AdminOfficeController> {
                 final user = controller.users[index];
                 return buildUserCard(
                     context,
+                    user,
                     controller.extractInitials(user.name),
                     user.name,
                     DateFormat.yMd().add_jm().format(user.createdAt).toString(),
@@ -36,8 +74,14 @@ class AdminOfficeUserCardWidget extends GetView<AdminOfficeController> {
     );
   }
 
-  Widget buildUserCard(BuildContext context, String initial, String name,
-          String visitedTime, String identity, bool isAnswered) =>
+  Widget buildUserCard(
+          BuildContext context,
+          UserAdminOfficeModel user,
+          String initial,
+          String name,
+          String visitedTime,
+          String identity,
+          bool isAnswered) =>
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
@@ -79,6 +123,7 @@ class AdminOfficeUserCardWidget extends GetView<AdminOfficeController> {
                       color: Colors.black,
                       fontSize: 14,
                     ))),
+            Expanded(flex: 3, child: getCommentViaUid(user.uid, user.version)),
             Expanded(
                 flex: 1,
                 child: Row(
@@ -97,6 +142,27 @@ class AdminOfficeUserCardWidget extends GetView<AdminOfficeController> {
           ]),
         ),
       );
+}
+
+Widget getCommentViaUid(String id, int version) {
+  final commentText = 'Show Text'.obs;
+  return GestureDetector(
+    onTap: () async {
+      commentText.value = await getCommentViaUID(id, version);
+    },
+    child: Obx(
+      () => Text(commentText.value,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+          )),
+    ),
+  );
+}
+
+Future<String> getCommentViaUID(String id, int version) async {
+  return await RemarksRepository.getRemarksListViaUID(
+      'adminsOffice', id, version);
 }
 
 class TooltipWithActions extends StatelessWidget {

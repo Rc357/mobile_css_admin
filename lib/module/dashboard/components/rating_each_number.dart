@@ -88,10 +88,18 @@ class RatingEachNumber extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Text(
-                              '${overAllAverage.toStringAsFixed(2)}',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
+                            if ('${overAllAverage.toStringAsFixed(2)}' !=
+                                'Infinity')
+                              Text(
+                                '${overAllAverage.toStringAsFixed(2)}',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                            if ('${overAllAverage.toStringAsFixed(2)}' ==
+                                'Infinity')
+                              Text(
+                                '0',
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
                           ],
                         ),
                       ],
@@ -123,7 +131,9 @@ class RatingEachNumber extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text('${average.toStringAsFixed(2)}'),
+                  if ('${average.toStringAsFixed(2)}' != 'Infinity')
+                    Text('${average.toStringAsFixed(2)}'),
+                  if ('${average.toStringAsFixed(2)}' == 'Infinity') Text('0'),
                 ],
               ),
             ],

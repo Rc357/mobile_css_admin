@@ -15,16 +15,14 @@ class LibraryController extends GetxController {
 
   final args = Get.arguments as QuestionnaireVersionModel;
 
-  final _hasReachedMax = false.obs;
-
   late Worker? _statusEverWorker;
   late Worker? _hasReachedMaxListener;
 
+  final _hasReachedMax = false.obs;
   bool get hasReachedMax => _hasReachedMax.value;
   RxBool get hasReachedMaxRx => _hasReachedMax;
 
-  final _scrollController = ScrollController();
-
+  final scrollController = ScrollController();
   final userCollectionName = 'userLibrary';
 
   String currentState() =>
@@ -35,7 +33,7 @@ class LibraryController extends GetxController {
     _monitorFeedItemsStatus();
     getUserLibrary();
     _setUpHasReachedMaxListener();
-    _scrollController.addListener(_monitorScrolling);
+    scrollController.addListener(_monitorScrolling);
     super.onInit();
   }
 
@@ -44,7 +42,7 @@ class LibraryController extends GetxController {
     _statusEverWorker?.dispose();
     _hasReachedMaxListener?.dispose();
 
-    _scrollController.dispose();
+    scrollController.dispose();
     super.onClose();
   }
 
@@ -73,9 +71,9 @@ class LibraryController extends GetxController {
   }
 
   void _monitorScrolling() {
-    final offset = _scrollController.offset;
-    final maxScrollExtent = _scrollController.position.maxScrollExtent;
-    final outOfRange = _scrollController.position.outOfRange;
+    final offset = scrollController.offset;
+    final maxScrollExtent = scrollController.position.maxScrollExtent;
+    final outOfRange = scrollController.position.outOfRange;
     if (offset >= maxScrollExtent && !outOfRange) {
       getMoreUsers();
     }
@@ -89,7 +87,9 @@ class LibraryController extends GetxController {
           behavior: SnackBarBehavior.floating,
           content: Text('Already loaded all users'),
         );
-        ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+        Future.delayed(Duration(seconds: 3)).then((_) {
+          ScaffoldMessenger.of(Get.context!).showSnackBar(snackBar);
+        });
       }
     });
   }
@@ -112,11 +112,14 @@ class LibraryController extends GetxController {
 
   Future<void> getMoreUsers() async {
     myLogger.i('GETTING MORE USER');
+    myLogger.i('NAME: $userCollectionName');
+    myLogger.i('LAST UID: ${users.last.uid}');
     status.value = LibraryControllerStatus.initial;
     try {
       if (_hasReachedMax.value == false) {
         final lastDocumentSnapshot =
-            await UserRepository.getUserDocumentSnapshot(users.last.uid);
+            await UserRepository.getUsersDocumentSnapshot(
+                userCollectionName, users.last.uid);
         final newItems = await UserRepository.getUsersLibrary(
             lastDocumentSnapshot: lastDocumentSnapshot,
             office: userCollectionName,

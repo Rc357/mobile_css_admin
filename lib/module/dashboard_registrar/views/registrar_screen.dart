@@ -1,3 +1,4 @@
+import 'package:admin/module/dashboard_registrar/controllers/registrar_controller.dart';
 import 'package:admin/module/dashboard_registrar/widgets/user_card.dart';
 import 'package:admin/widgets/respondent_header.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,13 @@ import 'package:get/get.dart';
 import '../../../constants.dart';
 
 class RegistrarScreen extends StatelessWidget {
+  final controller = RegistrarController.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
+          controller: controller.scrollController,
           primary: false,
           padding: EdgeInsets.all(defaultPadding),
           child: Column(
