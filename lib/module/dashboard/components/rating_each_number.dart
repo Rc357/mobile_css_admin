@@ -58,19 +58,26 @@ class RatingEachNumber extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              'Average',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ],
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: MediaQuery.of(context).size.width * .02),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Average',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                     ...questionAverageList.asMap().entries.map((e) =>
                         buildQuestionRate(
-                            e.key + 1, e.value.question, e.value.average)),
+                            e.key + 1,
+                            e.value.question,
+                            e.value.average,
+                            MediaQuery.of(context).size.width * .03)),
                     Divider(
                       height: 1,
                       color: Colors.blue,
@@ -100,6 +107,93 @@ class RatingEachNumber extends StatelessWidget {
                                 '0',
                                 style: TextStyle(fontWeight: FontWeight.w600),
                               ),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    5 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    4.2)
+                              Text(
+                                'Excellent',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    4.1 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    3.4)
+                              Text(
+                                'Very Good',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    3.4 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    2.6)
+                              Text(
+                                'Good',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    2.6 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    1.8)
+                              Text(
+                                'Fair',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    1.8 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    1.0)
+                              Text(
+                                'Poor',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    .99 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    .5)
+                              Text(
+                                'Excellent',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            if (double.parse(
+                                        overAllAverage.toStringAsFixed(2)) <=
+                                    .49 &&
+                                double.parse(
+                                        overAllAverage.toStringAsFixed(2)) >=
+                                    .0)
+                              Text(
+                                'Poor',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic),
+                              ),
                           ],
                         ),
                       ],
@@ -112,7 +206,8 @@ class RatingEachNumber extends StatelessWidget {
         ));
   }
 
-  Widget buildQuestionRate(int number, String question, double average) =>
+  Widget buildQuestionRate(
+          int number, String question, double average, double width) =>
       Column(
         children: [
           Divider(height: 1),
@@ -129,12 +224,16 @@ class RatingEachNumber extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  if ('${average.toStringAsFixed(2)}' != 'Infinity')
-                    Text('${average.toStringAsFixed(2)}'),
-                  if ('${average.toStringAsFixed(2)}' == 'Infinity') Text('0'),
-                ],
+              Padding(
+                padding: EdgeInsets.only(right: width),
+                child: Row(
+                  children: [
+                    if ('${average.toStringAsFixed(2)}' != 'Infinity')
+                      Text('${average.toStringAsFixed(2)}'),
+                    if ('${average.toStringAsFixed(2)}' == 'Infinity')
+                      Text('0'),
+                  ],
+                ),
               ),
             ],
           ),
