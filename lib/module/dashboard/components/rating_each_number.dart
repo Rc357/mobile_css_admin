@@ -58,17 +58,20 @@ class RatingEachNumber extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              right: MediaQuery.of(context).size.width * .02),
-                          child: Row(
-                            children: [
-                              Text(
+                        Row(
+                          children: [
+                            Container(
+                              width: 70,
+                              child: Text(
                                 'Average',
                                 style: TextStyle(fontWeight: FontWeight.w700),
                               ),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              'Total Users',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -77,6 +80,7 @@ class RatingEachNumber extends StatelessWidget {
                             e.key + 1,
                             e.value.question,
                             e.value.average,
+                            e.value.totalUser,
                             MediaQuery.of(context).size.width * .03)),
                     Divider(
                       height: 1,
@@ -129,7 +133,7 @@ class RatingEachNumber extends StatelessWidget {
                                         overAllAverage.toStringAsFixed(2)) >=
                                     3.4)
                               Text(
-                                'Very Good',
+                                'Very Satisfactory',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontStyle: FontStyle.italic),
@@ -141,7 +145,7 @@ class RatingEachNumber extends StatelessWidget {
                                         overAllAverage.toStringAsFixed(2)) >=
                                     2.6)
                               Text(
-                                'Good',
+                                'Satisfactory',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontStyle: FontStyle.italic),
@@ -170,30 +174,30 @@ class RatingEachNumber extends StatelessWidget {
                                     fontWeight: FontWeight.w700,
                                     fontStyle: FontStyle.italic),
                               ),
-                            if (double.parse(
-                                        overAllAverage.toStringAsFixed(2)) <=
-                                    .99 &&
-                                double.parse(
-                                        overAllAverage.toStringAsFixed(2)) >=
-                                    .5)
-                              Text(
-                                'Excellent',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                            if (double.parse(
-                                        overAllAverage.toStringAsFixed(2)) <=
-                                    .49 &&
-                                double.parse(
-                                        overAllAverage.toStringAsFixed(2)) >=
-                                    .0)
-                              Text(
-                                'Poor',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontStyle: FontStyle.italic),
-                              ),
+                            // if (double.parse(
+                            //             overAllAverage.toStringAsFixed(2)) <=
+                            //         .99 &&
+                            //     double.parse(
+                            //             overAllAverage.toStringAsFixed(2)) >=
+                            //         .5)
+                            //   Text(
+                            //     'Excellent',
+                            //     style: TextStyle(
+                            //         fontWeight: FontWeight.w700,
+                            //         fontStyle: FontStyle.italic),
+                            //   ),
+                            // if (double.parse(
+                            //             overAllAverage.toStringAsFixed(2)) <=
+                            //         .49 &&
+                            //     double.parse(
+                            //             overAllAverage.toStringAsFixed(2)) >=
+                            //         .0)
+                            //   Text(
+                            //     'Poor',
+                            //     style: TextStyle(
+                            //         fontWeight: FontWeight.w700,
+                            //         fontStyle: FontStyle.italic),
+                            //   ),
                           ],
                         ),
                       ],
@@ -206,8 +210,8 @@ class RatingEachNumber extends StatelessWidget {
         ));
   }
 
-  Widget buildQuestionRate(
-          int number, String question, double average, double width) =>
+  Widget buildQuestionRate(int number, String question, double average,
+          int userLength, double width) =>
       Column(
         children: [
           Divider(height: 1),
@@ -229,9 +233,31 @@ class RatingEachNumber extends StatelessWidget {
                 child: Row(
                   children: [
                     if ('${average.toStringAsFixed(2)}' != 'Infinity')
-                      Text('${average.toStringAsFixed(2)}'),
+                      Container(
+                        width: 70,
+                        child: Text(
+                          '${average.toStringAsFixed(2)}',
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
                     if ('${average.toStringAsFixed(2)}' == 'Infinity')
-                      Text('0'),
+                      Container(
+                        width: 70,
+                        child: Text(
+                          '0',
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    if ('$userLength' != 'Infinity')
+                      Text(
+                        '$userLength',
+                        textAlign: TextAlign.right,
+                      ),
+                    if ('$userLength' == 'Infinity')
+                      Text(
+                        '0',
+                        textAlign: TextAlign.right,
+                      ),
                   ],
                 ),
               ),

@@ -39,8 +39,19 @@ class OfficesCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Average Rating: '),
-                        Text(officesArgsData.average.toStringAsFixed(2)),
+                        if (officesArgsData.questionnaireType ==
+                            'Two Points Case')
+                          Text(
+                              'Highest Response "${officesArgsData.twoPointText.toUpperCase()}": '),
+                        if (officesArgsData.questionnaireType ==
+                            'Five Points Case')
+                          Text('Average Rating: '),
+                        if (officesArgsData.questionnaireType ==
+                            'Two Points Case')
+                          Text('${officesArgsData.average}'),
+                        if (officesArgsData.questionnaireType ==
+                            'Five Points Case')
+                          Text(officesArgsData.average.toStringAsFixed(2)),
                       ],
                     ),
                     Row(

@@ -37,51 +37,52 @@ class OfficesListCard extends GetView<MainScreenController> {
             : OverAllRating(
                 averageRating: (adminOfficeBarGraphController
                             .totalAverageFivePoints.value +
-                        adminOfficeBarGraphController
-                            .totalAverageTwoPoints.value +
+                        adminOfficeBarGraphController.highestTwoPoints.value +
                         cashierBarGraphController.totalAverageFivePoints.value +
-                        cashierBarGraphController.totalAverageTwoPoints.value +
+                        cashierBarGraphController.highestTwoPoints.value +
                         libraryBarGraphController.totalAverageFivePoints.value +
-                        libraryBarGraphController.totalAverageTwoPoints.value +
+                        libraryBarGraphController.highestTwoPoints.value +
                         registrarBarGraphController
                             .totalAverageFivePoints.value +
-                        registrarBarGraphController
-                            .totalAverageTwoPoints.value +
+                        registrarBarGraphController.highestTwoPoints.value +
                         securityOfficeBarGraphController
                             .totalAverageFivePoints.value +
                         securityOfficeBarGraphController
-                            .totalAverageTwoPoints.value) /
+                            .highestTwoPoints.value) /
                     5,
-                officeWithHighestRate: adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.totalAverageTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value &&
-                        adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.totalAverageTwoPoints.value >
+                officeWithHighestRate: adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value &&
+                        adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value >
                             libraryBarGraphController.totalAverageFivePoints.value +
                                 libraryBarGraphController
-                                    .totalAverageTwoPoints.value &&
-                        adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.totalAverageTwoPoints.value >
+                                    .highestTwoPoints.value &&
+                        adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value >
                             registrarBarGraphController.totalAverageFivePoints.value +
                                 registrarBarGraphController
-                                    .totalAverageTwoPoints.value &&
-                        adminOfficeBarGraphController.totalAverageFivePoints.value +
-                                adminOfficeBarGraphController
-                                    .totalAverageTwoPoints.value >
+                                    .highestTwoPoints.value &&
+                        adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value >
                             securityOfficeBarGraphController.totalAverageFivePoints.value +
                                 securityOfficeBarGraphController
-                                    .totalAverageTwoPoints.value
+                                    .highestTwoPoints.value
                     ? 'Admin Office'
-                    : cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value >
-                                adminOfficeBarGraphController.totalAverageFivePoints.value +
-                                    adminOfficeBarGraphController
-                                        .totalAverageTwoPoints.value &&
-                            cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value >
-                                libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value &&
-                            cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value > registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value &&
-                            cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value > securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value
+                    : cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value &&
+                            cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value >
+                                libraryBarGraphController.totalAverageFivePoints.value +
+                                    libraryBarGraphController
+                                        .highestTwoPoints.value &&
+                            cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value >
+                                registrarBarGraphController.totalAverageFivePoints.value +
+                                    registrarBarGraphController
+                                        .highestTwoPoints.value &&
+                            cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value >
+                                securityOfficeBarGraphController
+                                        .totalAverageFivePoints.value +
+                                    securityOfficeBarGraphController.highestTwoPoints.value
                         ? "Cashier Office"
-                        : libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.totalAverageTwoPoints.value && libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value && libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value > registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value && libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value > securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value
+                        : libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.highestTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value && libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.highestTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value && libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.highestTwoPoints.value > registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.highestTwoPoints.value && libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.highestTwoPoints.value > securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.highestTwoPoints.value
                             ? 'Library Office'
-                            : registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.totalAverageTwoPoints.value && registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value && registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value > libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value && registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value > securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value
+                            : registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.highestTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value && registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.highestTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value && registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.highestTwoPoints.value > libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.highestTwoPoints.value && registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.highestTwoPoints.value > securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.highestTwoPoints.value
                                 ? 'Registrar Office'
-                                : securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.totalAverageTwoPoints.value && securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.totalAverageTwoPoints.value && securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value > libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.totalAverageTwoPoints.value && securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.totalAverageTwoPoints.value > registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.totalAverageTwoPoints.value
+                                : securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.highestTwoPoints.value > adminOfficeBarGraphController.totalAverageFivePoints.value + adminOfficeBarGraphController.highestTwoPoints.value && securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.highestTwoPoints.value > cashierBarGraphController.totalAverageFivePoints.value + cashierBarGraphController.highestTwoPoints.value && securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.highestTwoPoints.value > libraryBarGraphController.totalAverageFivePoints.value + libraryBarGraphController.highestTwoPoints.value && securityOfficeBarGraphController.totalAverageFivePoints.value + securityOfficeBarGraphController.highestTwoPoints.value > registrarBarGraphController.totalAverageFivePoints.value + registrarBarGraphController.highestTwoPoints.value
                                     ? 'Security Office'
                                     : '',
               )),
@@ -117,11 +118,14 @@ class OfficesListCard extends GetView<MainScreenController> {
                                 ? adminOfficeBarGraphController
                                     .totalAverageFivePoints.value
                                 : adminOfficeBarGraphController
-                                    .totalAverageTwoPoints.value,
+                                    .highestTwoPoints.value,
+                            twoPointText: adminOfficeBarGraphController
+                                .highestTwoPointsText.value,
                             mostVisitedUser: adminOfficeBarGraphController
                                 .highestVisitor.value,
                             officeName: "Admin Office",
-                            questionnaireType: adminOfficeBarGraphController.typeOfQuestionnaire.value,
+                            questionnaireType: adminOfficeBarGraphController
+                                .typeOfQuestionnaire.value,
                           ),
                         ),
                       ),
@@ -146,11 +150,14 @@ class OfficesListCard extends GetView<MainScreenController> {
                                 ? cashierBarGraphController
                                     .totalAverageFivePoints.value
                                 : cashierBarGraphController
-                                    .totalAverageTwoPoints.value,
+                                    .highestTwoPoints.value,
+                            twoPointText: cashierBarGraphController
+                                .highestTwoPointsText.value,
                             mostVisitedUser:
                                 cashierBarGraphController.highestVisitor.value,
                             officeName: "Cashier Office",
-                            questionnaireType: cashierBarGraphController.typeOfQuestionnaire.value,
+                            questionnaireType: cashierBarGraphController
+                                .typeOfQuestionnaire.value,
                           ),
                         ),
                       ),
@@ -175,11 +182,14 @@ class OfficesListCard extends GetView<MainScreenController> {
                                 ? libraryBarGraphController
                                     .totalAverageFivePoints.value
                                 : libraryBarGraphController
-                                    .totalAverageTwoPoints.value,
+                                    .highestTwoPoints.value,
+                            twoPointText: cashierBarGraphController
+                                .highestTwoPointsText.value,
                             mostVisitedUser:
                                 libraryBarGraphController.highestVisitor.value,
                             officeName: "Library Office",
-                            questionnaireType: libraryBarGraphController.typeOfQuestionnaire.value,
+                            questionnaireType: libraryBarGraphController
+                                .typeOfQuestionnaire.value,
                           ),
                         ),
                       ),
@@ -204,11 +214,14 @@ class OfficesListCard extends GetView<MainScreenController> {
                                 ? registrarBarGraphController
                                     .totalAverageFivePoints.value
                                 : registrarBarGraphController
-                                    .totalAverageTwoPoints.value,
+                                    .highestTwoPoints.value,
+                            twoPointText: cashierBarGraphController
+                                .highestTwoPointsText.value,
                             mostVisitedUser: registrarBarGraphController
                                 .highestVisitor.value,
                             officeName: "Registrar Office",
-                            questionnaireType: registrarBarGraphController.typeOfQuestionnaire.value,
+                            questionnaireType: registrarBarGraphController
+                                .typeOfQuestionnaire.value,
                           ),
                         ),
                       ),
@@ -233,11 +246,14 @@ class OfficesListCard extends GetView<MainScreenController> {
                                 ? securityOfficeBarGraphController
                                     .totalAverageFivePoints.value
                                 : securityOfficeBarGraphController
-                                    .totalAverageTwoPoints.value,
+                                    .highestTwoPoints.value,
+                            twoPointText: cashierBarGraphController
+                                .highestTwoPointsText.value,
                             mostVisitedUser: securityOfficeBarGraphController
                                 .highestVisitor.value,
                             officeName: "Security Office",
-                            questionnaireType: securityOfficeBarGraphController.typeOfQuestionnaire.value,
+                            questionnaireType: securityOfficeBarGraphController
+                                .typeOfQuestionnaire.value,
                           ),
                         ),
                       ),

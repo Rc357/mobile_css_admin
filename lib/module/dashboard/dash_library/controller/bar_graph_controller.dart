@@ -44,7 +44,8 @@ class LibraryBarGraphController extends GetxController {
   final averageGuest = 0.0.obs;
   final averageStudent = 0.0.obs;
   final totalAverageFivePoints = 0.0.obs;
-  final totalAverageTwoPoints = 0.0.obs;
+  final highestTwoPoints = 0.0.obs;
+  final highestTwoPointsText = ''.obs;
   final highestVisitor = ''.obs;
 
   final excellent = 0.0.obs;
@@ -65,6 +66,7 @@ class LibraryBarGraphController extends GetxController {
 
   final typeOfQuestionnaire = ''.obs;
   final eachNumAverageList = <QuestionAverage>[].obs;
+  final questionTotalTwoPoints = <QuestionTotalTwoPoints>[].obs;
 
   final List<Color> fixedColors = [
     Colors.blue,
@@ -161,11 +163,13 @@ class LibraryBarGraphController extends GetxController {
     no.value = 0.0;
 
     totalAverageFivePoints.value = 0;
-    totalAverageTwoPoints.value = 0;
-
+    highestTwoPoints.value = 0;
     eachNumAverageList.clear();
+    questionTotalTwoPoints.clear();
     kFlutterHashtags.clear();
     allQuestion.clear();
+
+    highestTwoPointsText.value = '';
   }
 
   void setInterval() {
@@ -321,7 +325,8 @@ class LibraryBarGraphController extends GetxController {
         satisfactory.value += i.satisfactory;
         fair.value += i.fair;
         poor.value += i.poor;
-
+        final totalUserAnswer =
+            i.excellent + i.verySatisfactory + i.satisfactory + i.fair + i.poor;
         eachNumAverageList.add(QuestionAverage(
             question: i.question,
             average: (i.excellent * 5 +
@@ -329,15 +334,21 @@ class LibraryBarGraphController extends GetxController {
                     i.satisfactory * 3 +
                     i.fair * 2 +
                     i.poor) /
-                users.length));
+                totalUserAnswer,
+            totalUser: totalUserAnswer));
       }
       if (i.type == QuestionTypeEnum.twoPointsCase) {
         yes.value += i.yes;
         no.value += i.no;
 
-        eachNumAverageList.add(QuestionAverage(
-            question: i.question,
-            average: (i.yes * 1 + i.no * 0) / users.length));
+        final totalUserAnswer = i.yes + i.no;
+        questionTotalTwoPoints.add(
+          QuestionTotalTwoPoints(
+              question: i.question,
+              totalYes: i.yes,
+              totalNo: i.no,
+              totalUser: totalUserAnswer),
+        );
       }
     }
 
@@ -362,8 +373,14 @@ class LibraryBarGraphController extends GetxController {
       }
     }
     if (yes.value != 0 || no.value != 0) {
-      totalAverageTwoPoints.value =
-          (yes.value * 1 + no.value * 0) / (yes.value + no.value);
+      if (yes.value > no.value) {
+        highestTwoPoints.value = yes.value;
+        highestTwoPointsText.value = 'Yes';
+      }
+      if (yes.value < no.value) {
+        highestTwoPoints.value = no.value;
+        highestTwoPointsText.value = 'No';
+      }
       typeOfQuestionnaire.value = 'Two Points Case';
     }
   }

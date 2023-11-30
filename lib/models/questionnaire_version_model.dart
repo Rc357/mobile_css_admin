@@ -35,4 +35,15 @@ class QuestionnaireVersionModel {
       updatedAt: (map[UPDATED_AT] as Timestamp).toDate(),
     );
   }
+
+  factory QuestionnaireVersionModel.fromDocument(
+      DocumentSnapshot documentSnapshot) {
+    final map = documentSnapshot.data() as Map<String, dynamic>;
+    return QuestionnaireVersionModel(
+      id: map[ID] as String,
+      questionnaireVersion: map[QUESTIONNAIRE_VERSION] as int,
+      createdAt: (map[CREATED_AT] as Timestamp).toDate(),
+      updatedAt: (map[UPDATED_AT] as Timestamp).toDate(),
+    );
+  }
 }

@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QuestionsRepository {
   static const String _version = 'version';
+  static const String _questionnaireVersion = 'questionnaireVersion';
   static const String _officeName = 'officeName';
   static const String _surveyRemarks = 'surveyRemarks';
 
@@ -278,6 +279,21 @@ class QuestionsRepository {
       return QuestionnaireVersionModel.fromMap(map);
     }).toList();
     return admins;
+  }
+
+  static Future<List<QuestionnaireVersionModel>>
+      getQuestionnaireViaVersionAndOfficeName(
+          {String? office, required int version}) async {
+    MyLogger.printInfo('COLLECTION NAME: $office, VERSION: $version');
+    try {
+      Query query = firestore
+          .collection(office!)
+          .where(_questionnaireVersion, isEqualTo: version);
+      final result = await query.get();
+      return result.docs.map(QuestionnaireVersionModel.fromDocument).toList();
+    } catch (_) {
+      rethrow;
+    }
   }
 
   static Future<void> updateQuestionnaireVersionViaId(

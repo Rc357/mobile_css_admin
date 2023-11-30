@@ -1,5 +1,6 @@
 import 'package:admin/enums/question_type_enum.dart';
 import 'package:admin/module/dashboard/components/rating_each_number.dart';
+import 'package:admin/module/dashboard/components/rating_each_number_two_points.dart';
 import 'package:admin/module/dashboard/dash_library/controller/bar_graph_controller.dart';
 import 'package:admin/widgets/loading_indicator_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -180,17 +181,31 @@ class LibraryBarChartWidget extends GetView<LibraryBarGraphController> {
         SizedBox(
           height: 10,
         ),
-        Obx(
-          () => controller.isLoading
-              ? Center(
-                  child: LoadingIndicator(color: Colors.blue),
-                )
-              : controller.eachNumAverageList.length != 0
-                  ? RatingEachNumber(
-                      questionAverageList: controller.eachNumAverageList,
-                    )
-                  : SizedBox(),
-        )
+        if (controller.typeOfQuestionnaire.value == 'Five Points Case')
+          Obx(
+            () => controller.isLoading
+                ? Center(
+                    child: LoadingIndicator(color: Colors.blue),
+                  )
+                : controller.eachNumAverageList.length != 0
+                    ? RatingEachNumber(
+                        questionAverageList: controller.eachNumAverageList,
+                      )
+                    : SizedBox(),
+          ),
+        if (controller.typeOfQuestionnaire.value == 'Two Points Case')
+          Obx(
+            () => controller.isLoading
+                ? Center(
+                    child: LoadingIndicator(color: Colors.blue),
+                  )
+                : controller.questionTotalTwoPoints.length != 0
+                    ? RatingEachNumberTwoPoints(
+                        questionTotalTwoPoints:
+                            controller.questionTotalTwoPoints,
+                      )
+                    : SizedBox(),
+          ),
       ],
     );
   }
